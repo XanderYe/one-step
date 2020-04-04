@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xanderye.mapper.PayloadMapper">
+    <resultMap id="BaseResultMap" type="cn.xanderye.onestep.entity.Payload">
+        <id column="id" property="id"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="interface_url" property="interfaceUrl"/>
+        <result column="method" property="method"/>
+        <result column="headers" property="headers"/>
+        <result column="params" property="params"/>
+        <result column="note" property="note"/>
+        <result column="timeout" property="timeout"/>
+    </resultMap>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO payload (activity_id, interface_url, method, headers, params, note, timeout)
+        VALUES (#{activityId}, #{interfaceUrl}, #{method}, #{headers}, #{params}, #{note}, #{timeout})
+    </insert>
+</mapper>

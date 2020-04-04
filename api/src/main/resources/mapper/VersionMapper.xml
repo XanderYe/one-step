@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xanderye.mapper.VersionMapper">
+    <resultMap id="BaseResultMap" type="cn.xanderye.onestep.entity.Version">
+        <id column="id" property="id"/>
+        <result column="version" property="version"/>
+        <result column="desc" property="desc"/>
+        <result column="date" property="date"/>
+    </resultMap>
+
+    <select id="getLastVersion" resultMap="BaseResultMap">
+        SELECT * FROM version ORDER BY id DESC LIMIT 1
+    </select>
+
+    <insert id="insert">
+        INSERT INTO version (version, `desc`, `date`) VALUES (#{version}, #{desc}, #{date})
+    </insert>
+</mapper>

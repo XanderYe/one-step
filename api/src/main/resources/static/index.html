@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DNF助手管理</title>
+    <script src="js/vue.min.js"></script>
+    <script src="js/axios.min.js"></script>
+    <style>
+        .label {
+            width: 200px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div>
+        <p><span class="label">请输入授权码：</span><input type="password" v-model="auth"></p>
+    </div>
+    <div>
+        <h2>添加活动</h2>
+        <p><span class="label">请输入活动名称：</span><input type="text" v-model="activity.name"></p>
+        <p><span class="label">请输入活动地址：</span><input type="text" v-model="activity.url" style="width: 400px"></p>
+        <p>
+            <button @click="addActivity">添加</button>
+        </p>
+    </div>
+    <div>
+        <h2>添加接口地址</h2>
+        <span class="label">请选择活动：</span>
+        <select v-model="payload.activityId" style="width: 400px">
+            <option v-for="activity in activityList" :key="activity.id" :value="activity.id">{{activity.name}}</option>
+        </select>
+        <button @click="expire">设置活动为过期</button>
+        <p><span class="label">请输入接口名称：</span></span><input type="text" v-model="payload.note"></p>
+        <p><span class="label">请输入接口地址：</span><input type="text" v-model="payload.interfaceUrl" style="width: 400px"></p>
+        <p><span class="label">请输入请求头：</span><input type="text" v-model="payload.headers" style="width: 400px"></p>
+        <p><span class="label">请输入请求体：</span><input type="text" v-model="payload.params" style="width: 400px"></p>
+        <p>
+            <span class="label">请选择请求方式：</span>
+            <select v-model="payload.method">
+                <option :value="0">get</option>
+                <option :value="1">post</option>
+            </select>
+        </p>
+        <p><span class="label">请输入接口请求延迟：</span><input type="number" min="1" max="99" v-model="payload.timeout"></p>
+        <p>
+            <button @click="addPayload">添加</button>
+        </p>
+    </div>
+    <div>
+        <h2>更新版本</h2>
+        <p><span class="label">请输入版本号：</span><input type="text" v-model="version.version"></p>
+        <p><span class="label">请输入更新内容：</span><input type="text" v-model="version.desc" style="width: 400px"></p>
+        <p><input type="file" ref="jar" accept=".jar" @change="changeFile($event)"></p>
+        <p>
+            <button @click="updateVersion">更新</button>
+        </p>
+    </div>
+</div>
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        auth: "",
+        activity: {
+          name: "",
+          url: ""
+        },
+        activityList: [],
+        payload: {
+          activityId: "",
+          interfaceUrl: "",
+          method: 0,
+          headers: "",
+          params: "",
+          note: "",
+          timeout: 1,
+        },
+        instance: null,
+        version: {
+          version: "",
+          desc: "",
+        },
+        jar: null
+      }
+    },
+    methods: {
+      getActivities() {
+        this.instance.get("info/getActivities").then(res => {
+          if (res.data.code === 0) {
+            this.activityList = res.data.data;
+          }
+        });
+      },
+      addActivity() {
+        if (this.activity.name && this.activity.url) {
+          this.instance.post("save/activity", this.activity).then(res => {
+            if (res.data.code === 0) {
+              alert("添加成功");
+              this.getActivities();
+              this.activity = {
+                name: "",
+                url: ""
+              }
+            } else {
+              alert(res.data.msg);
+            }
+          });
+        } else {
+          alert("请填写活动信息");
+        }
+      },
+      addPayload() {
+        if (this.payload.activityId && this.payload.interfaceUrl) {
+          this.instance.post("save/payload", this.payload).then(res => {
+            if (res.data.code === 0) {
+              alert("添加成功");
+              this.payload = {
+                activityId: "",
+                interfaceUrl: "",
+                method: 0,
+                headers: "",
+                params: "",
+                note: "",
+                timeout: 1,
+              }
+            } else {
+              alert(res.data.msg);
+            }
+          });
+        } else {
+          alert("请填写接口信息");
+        }
+      },
+      expire() {
+        if (this.payload.activityId) {
+          if (confirm("是否设置活动为过期？")) {
+            this.instance.post("save/expire", {activityId: this.payload.activityId}).then(res => {
+              if (res.data.code === 0) {
+                alert("设置成功");
+                this.getActivities();
+              } else {
+                alert(res.data.msg);
+              }
+            });
+          }
+        } else {
+          alert("请选择活动");
+        }
+      },
+      changeFile(e) {
+        this.jar = e.target.files[0];
+      },
+      updateVersion() {
+        if (this.version.version && this.version.desc && this.jar) {
+          let form = new FormData();
+          form.append("version", this.version.version);
+          form.append("desc", this.version.desc);
+          form.append("jar", this.jar);
+          this.instance.post("save/version", form).then(res => {
+            if (res.data.code === 0) {
+              alert("更新成功");
+              this.version = {
+                version: "",
+                desc: "",
+              };
+              this.$refs.jar.value = "";
+            } else {
+              alert(res.data.msg);
+            }
+          });
+        }
+      }
+    },
+    created() {
+      this.instance = axios.create();
+      this.instance.interceptors.request.use(config => {
+        config.headers.auth = this.auth;
+        return config;
+      })
+    },
+    mounted() {
+      this.getActivities();
+    }
+  })
+</script>
+</body>
+</html>

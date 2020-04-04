@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="rootLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.xanderye.controller.MainController">
+   <children>
+      <ComboBox fx:id="areaBox" layoutX="23.0" layoutY="55.0" prefHeight="25.0" prefWidth="120.0" />
+      <ComboBox fx:id="optBox" layoutX="160.0" layoutY="55.0" prefHeight="25.0" prefWidth="120.0" />
+      <ComboBox fx:id="characterBox" layoutX="298.0" layoutY="56.0" prefHeight="25.0" prefWidth="120.0" />
+      <Button fx:id="startButton" layoutX="755.0" layoutY="50.0" mnemonicParsing="false" onAction="#start" prefHeight="37.0" prefWidth="110.0" text="一键领取" />
+      <TextArea fx:id="logArea" editable="false" layoutX="314.0" layoutY="111.0" prefHeight="346.0" prefWidth="552.0" />
+      <ListView fx:id="activityListView" layoutX="21.0" layoutY="111.0" prefHeight="346.0" prefWidth="270.0" />
+      <Label layoutX="805.0" layoutY="465.0" prefHeight="25.0" prefWidth="84.0" text="\@XanderYe" />
+      <MenuBar prefWidth="920.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="文件">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#close" text="关闭" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="帮助">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#home" text="主页" />
+            </items>
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#about" text="关于" />
+            </items>
+              <items>
+                  <MenuItem mnemonicParsing="false" onAction="#update" text="检查更新" />
+              </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </children>
+</AnchorPane>

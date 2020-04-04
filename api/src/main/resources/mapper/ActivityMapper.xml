@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xanderye.mapper.ActivityMapper">
+
+    <resultMap id="BaseResultMap" type="cn.xanderye.onestep.entity.Activity">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="expired" property="expired"/>
+    </resultMap>
+
+    <resultMap id="PayloadResultMap" type="cn.xanderye.onestep.entity.Activity">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="expired" property="expired"/>
+        <collection property="payloadList" ofType="cn.xanderye.onestep.entity.Payload">
+            <id column="payload_id" property="id"/>
+            <result column="activity_id" property="activityId"/>
+            <result column="interface_url" property="interfaceUrl"/>
+            <result column="method" property="method"/>
+            <result column="headers" property="headers"/>
+            <result column="params" property="params"/>
+            <result column="note" property="note"/>
+            <result column="timeout" property="timeout"/>
+        </collection>
+    </resultMap>
+
+    <select id="getActivities" resultMap="BaseResultMap">
+        SELECT * FROM activity WHERE expired = 0
+    </select>
+
+    <select id="getActivated" resultMap="PayloadResultMap">
+        SELECT
+        a.*,
+        p.id as payload_id,
+        p.*
+        FROM activity a
+        LEFT JOIN payload p ON a.id = p.activity_id
+        WHERE a.expired = 0
+    </select>
+
+    <select id="getAll" resultMap="PayloadResultMap">
+        SELECT
+        a.*,
+        p.id as payload_id,
+        p.*
+        FROM activity a
+        LEFT JOIN payload p ON a.id = p.activity_id
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO activity (name, url) VALUES (#{name}, #{url})
+    </insert>
+
+    <update id="expire">
+        UPDATE activity SET expired = 1 WHERE id = #{activityId}
+    </update>
+</mapper>
