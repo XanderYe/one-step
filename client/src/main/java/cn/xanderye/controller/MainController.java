@@ -106,6 +106,7 @@ public class MainController implements Initializable {
                                     logger.error("msg", e);
                                 }
                             }
+                            logArea.appendText("执行完毕\n");
                         }
                     }
                 }

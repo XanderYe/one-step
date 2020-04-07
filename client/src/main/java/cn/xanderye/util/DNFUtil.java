@@ -5,6 +5,7 @@ import cn.xanderye.entity.Character;
 import cn.xanderye.entity.Payload;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import java.net.URLDecoder;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class DNFUtil {
     private static Logger logger = LoggerFactory.getLogger(DNFUtil.class);
@@ -50,7 +52,7 @@ public class DNFUtil {
     /**
      * 中文正则表达式
      */
-    private static Pattern CN_PATTERN = Pattern.compile("([^\u4E00-\u9FA5])");
+    private static Pattern CN_PATTERN = Pattern.compile("[\u4E00-\u9FA5]");
 
     /**
      * 获取大区
@@ -129,8 +131,9 @@ public class DNFUtil {
             result = HttpUtil.doPost(url, headers, cookies, params);
         }
         result = UnicodeUtil.unicodeStrToString(result);
-        String cn = getChineseCharacters(result);
-        return cn.length() > 0 ? cn : result;
+        List<String> cn = new ArrayList<>();
+        jsonObjIt(JSON.parseObject(result), cn);
+        return cn.size() > 0 ? String.join(" ", cn) : result;
     }
 
     public static String replaceUrl(String url, String paramString) {
@@ -163,9 +166,61 @@ public class DNFUtil {
         return string;
     }
 
-    public static String getChineseCharacters(String string) {
-        //[\u4E00-\u9FA5]是unicode2的中文区间
-        Matcher matcher = CN_PATTERN.matcher(string);
-        return matcher.replaceAll("");
+    /**
+     * 递归遍历jsonObject
+     * @param jsonObject
+     * @param list
+     * @return void
+     * @author XanderYe
+     * @date 2020/4/7
+     */
+    private static void jsonObjIt(JSONObject jsonObject, List list) {
+        for(JSONObject.Entry<String, Object> entry : jsonObject.entrySet()) {
+            String value = entry.getValue().toString();
+            if (value.startsWith("[{")) {
+                jsonArrayIt(JSON.parseArray(value), list);
+            } else if (value.startsWith("{")) {
+                jsonObjIt(JSON.parseObject(value), list);
+            } else {
+                Matcher matcher = CN_PATTERN.matcher(value);
+                if (matcher.find()) {
+                    list.add(value);
+                }
+            }
+        }
+    }
+
+    /**
+     * 递归遍历jsonArray
+     * @param jsonArray
+     * @param list
+     * @return void
+     * @author XanderYe
+     * @date 2020/4/7
+     */
+    private static void jsonArrayIt(JSONArray jsonArray, List list) {
+        for (int i=0;i<jsonArray.size();i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            jsonObjIt(jsonObject, list);
+        }
+    }
+
+    public static void main(String[] args) {
+        Payload payload = new Payload();
+        payload.setMethod(1);
+        payload.setInterfaceUrl("http://x6m5.ams.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=dnf&iActivityId=290134&sServiceDepartment=group_3&sSDID=47786e4e3b93c3215f505b62458d6fb7&sMiloTag=${sMiloTag}&isXhrPost=true");
+        payload.setParams("gameId=&sArea=${areaId}&iSex=&sRoleId=${characterNo}&iGender=&sServiceType=dnf&objCustomMsg=&areaname=浙江一区&roleid=${characterNo}&rolelevel=&rolename=&areaid=&iActivityId=290134&iFlowId=647547&g_tk=${gTk}&e_code=0&g_code=0&eas_url=http%3A%2F%2Fdnf.qq.com%2Fcp%2Fa20200228video%2F&eas_refer=http%3A%2F%2Fdnf.qq.com%2Fcp%2Fa20200228videom%2F%3Freqid%3D${uuid}%26version%3D22&xhr=1&sServiceDepartment=group_3&xhrPostKey=${random}");
+        String cookieString = "eas_sid=d1F5R8c6i2f3C5e6d5q6a8Q1Y2; pgv_info=ssid=s8540587158; ts_last=dnf.qq.com/gift.shtml; pgv_pvid=8221055408; ts_uid=161316628; gpmtips_cfg=%7B%22iSendApi%22%3A0%2C%22iShowCount%22%3A0%2C%22iOnlineCount%22%3A1%2C%22iSendOneCount%22%3A0%2C%22iShowAllCount%22%3A0%2C%22iHomeCount%22%3A0%7D; verifysession=h01addb4ef539fa31c3f3e2485474c6e485773fe1ae8e9c4da0caff85e6fa49c21bb59a90722a850f5e; pgv_pvi=5553643520; pgv_si=s960708608; _qpsvr_localtk=0.4778556224993864; recommend_init=1; rec_req_ctips_dnf=1; ptui_loginuin=202451454; uin=o0202451454; skey=@ZJk92ECvq; RK=eYhlDcgjd6; ptcz=44cc46edc34c7e7b5851800ce7202a743c927d45cea1eaaa6835f1e836f65e84; d7a9c0c275a4b8c94cf7397cc1d8bcc8=202451454";
+        cookies = HttpUtil.formatCookies(cookieString);
+        areaId = 11;
+        character = new Character();
+        character.setCharacterNo("47807962");
+        character.setCharacterName("大狗又空辣");
+        try {
+            String result = get(payload);
+            System.out.println(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

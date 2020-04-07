@@ -10,7 +10,7 @@ public class Constant {
     /**
      * 当前版本
      */
-    public final static String VERSION = "1.3";
+    public final static String VERSION = "1.4";
     /**
      * 数据源
      */

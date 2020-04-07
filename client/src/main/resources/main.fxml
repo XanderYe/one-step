@@ -9,9 +9,9 @@
       <ComboBox fx:id="optBox" layoutX="160.0" layoutY="55.0" prefHeight="25.0" prefWidth="120.0" />
       <ComboBox fx:id="characterBox" layoutX="298.0" layoutY="56.0" prefHeight="25.0" prefWidth="120.0" />
       <Button fx:id="startButton" layoutX="755.0" layoutY="50.0" mnemonicParsing="false" onAction="#start" prefHeight="37.0" prefWidth="110.0" text="一键领取" />
-      <TextArea fx:id="logArea" editable="false" layoutX="314.0" layoutY="111.0" prefHeight="346.0" prefWidth="552.0" />
-      <ListView fx:id="activityListView" layoutX="21.0" layoutY="111.0" prefHeight="346.0" prefWidth="270.0" />
-      <Label layoutX="805.0" layoutY="465.0" prefHeight="25.0" prefWidth="84.0" text="\@XanderYe" />
+      <TextArea fx:id="logArea" editable="false" layoutX="312.0" layoutY="141.0" prefHeight="316.0" prefWidth="552.0" />
+      <ListView fx:id="activityListView" layoutX="24.0" layoutY="141.0" prefHeight="316.0" prefWidth="270.0" />
+      <Label layoutX="804.0" layoutY="465.0" prefHeight="25.0" prefWidth="84.0" text="\@XanderYe" />
       <MenuBar prefWidth="920.0">
         <menus>
           <Menu mnemonicParsing="false" text="文件">
@@ -32,5 +32,6 @@
           </Menu>
         </menus>
       </MenuBar>
+      <Label layoutX="23.0" layoutY="92.0" prefHeight="37.0" prefWidth="842.0" text="只支持网页每日活动(微信/助手活动不支持)；部分活动若领取失败，请点击活动列表的活动，手动绑定大区，再重试领取" />
    </children>
 </AnchorPane>
