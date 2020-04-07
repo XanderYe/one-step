@@ -32,6 +32,6 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Label layoutX="23.0" layoutY="92.0" prefHeight="37.0" prefWidth="842.0" text="只支持网页每日活动(微信/助手活动不支持)；部分活动若领取失败，请点击活动列表的活动，手动绑定大区，再重试领取" />
+      <Label layoutX="23.0" layoutY="92.0" prefHeight="37.0" prefWidth="842.0" text="只支持网页每日活动(不支持微信/助手活动和一次性活动)；部分活动若领取失败，请点击活动列表的活动，手动绑定大区，再重试领取" />
    </children>
 </AnchorPane>
