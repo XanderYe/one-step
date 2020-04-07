@@ -12,6 +12,8 @@ import java.util.Date;
  */
 @Data
 public class Version {
+    private Integer id;
+
     private String version;
 
     private String desc;

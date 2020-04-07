@@ -21,4 +21,6 @@ public class Activity {
     private Boolean expired;
 
     private List<Payload> payloadList;
+
+    private Boolean auto;
 }

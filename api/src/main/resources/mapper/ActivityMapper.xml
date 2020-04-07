@@ -2,19 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.xanderye.mapper.ActivityMapper">
 
-    <resultMap id="BaseResultMap" type="cn.xanderye.onestep.entity.Activity">
+    <resultMap id="BaseResultMap" type="cn.xanderye.entity.Activity">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="url" property="url"/>
         <result column="expired" property="expired"/>
     </resultMap>
 
-    <resultMap id="PayloadResultMap" type="cn.xanderye.onestep.entity.Activity">
+    <resultMap id="PayloadResultMap" type="cn.xanderye.entity.Activity">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="url" property="url"/>
         <result column="expired" property="expired"/>
-        <collection property="payloadList" ofType="cn.xanderye.onestep.entity.Payload">
+        <collection property="payloadList" ofType="cn.xanderye.entity.Payload">
             <id column="payload_id" property="id"/>
             <result column="activity_id" property="activityId"/>
             <result column="interface_url" property="interfaceUrl"/>
