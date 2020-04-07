@@ -50,7 +50,7 @@
     </select>
 
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO activity (name, url) VALUES (#{name}, #{url})
+        INSERT INTO activity (name, url, expired) VALUES (#{name}, #{url}, #{expired})
     </insert>
 
     <update id="expire">
