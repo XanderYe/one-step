@@ -40,7 +40,7 @@ public class UpdateController implements Initializable {
         }
     }
 
-    public void version() {
+    public void update() {
         versionButton.setDisable(true);
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
