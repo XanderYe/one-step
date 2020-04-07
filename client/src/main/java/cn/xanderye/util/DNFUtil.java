@@ -1,5 +1,6 @@
 package cn.xanderye.util;
 
+import cn.xanderye.constant.Constant;
 import cn.xanderye.entity.Character;
 import cn.xanderye.entity.Payload;
 import com.alibaba.fastjson.JSON;
@@ -116,7 +117,9 @@ public class DNFUtil {
         String headerString = payload.getHeaders();
         String paramString = payload.getParams();
         String url = replaceUrl(payload.getInterfaceUrl(), paramString);
-        paramString = replaceParam(paramString);
+        if (paramString != null) {
+            paramString = replaceParam(paramString);
+        }
         Map<String, Object> headers = HttpUtil.formatHeaders(headerString);
         Map<String, Object> params = HttpUtil.formatParameters(paramString);
         String result;
@@ -132,13 +135,13 @@ public class DNFUtil {
 
     public static String replaceUrl(String url, String paramString) {
         try {
-            if (url.contains("sMiloTag")) {
+            if (url.contains(Constant.S_MILO_TAG)) {
                 String iActivityId = StringUtils.substringBetween(paramString, "iActivityId=", "&");
                 String iFlowId = StringUtils.substringBetween(paramString, "iFlowId=", "&");
                 String openId = (String) cookies.get("openid");
-                url = url.replace("${sMiloTag}", QQUtil.sMiloTag(iActivityId, iFlowId, openId));
+                url = url.replace(Constant.S_MILO_TAG, QQUtil.sMiloTag(iActivityId, iFlowId, openId));
             }
-            url = url.replace("${random}", String.valueOf(System.currentTimeMillis()));
+            url = url.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()));
         } catch (Exception e) {
             logger.error("msg", e);
         }
@@ -148,12 +151,12 @@ public class DNFUtil {
     public static String replaceParam(String string) {
         String skey = (String) cookies.get("skey");
         try {
-            string = string.replace("${random}", String.valueOf(System.currentTimeMillis()))
-                    .replace("${areaId}", String.valueOf(areaId))
-                    .replace("${characterNo}", character.getCharacterNo())
-                    .replace("${characterName}", character.getCharacterName())
-                    .replace("${gTk}", QQUtil.getGTK(skey))
-                    .replace("${uuid}", UUID.randomUUID().toString());
+            string = string.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()))
+                    .replace(Constant.AREA_ID, String.valueOf(areaId))
+                    .replace(Constant.CHARACTER_NO, character.getCharacterNo())
+                    .replace(Constant.CHARACTER_NAME, character.getCharacterName())
+                    .replace(Constant.GTK, QQUtil.getGTK(skey))
+                    .replace(Constant.UUID, UUID.randomUUID().toString());
         } catch (Exception e) {
             logger.error("msg", e);
         }

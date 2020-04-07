@@ -1,6 +1,7 @@
 package cn.xanderye.controller;
 
 import cn.xanderye.base.ResultBean;
+import cn.xanderye.constant.Constant;
 import cn.xanderye.entity.Activity;
 import cn.xanderye.entity.Payload;
 import cn.xanderye.entity.Version;
@@ -38,7 +39,7 @@ public class UpdateController {
         activityMapper.insert(activity);
         List<Payload> payloadList = activity.getPayloadList();
         if (payloadList != null && payloadList.size() > 0) {
-            for(Payload payload:payloadList) {
+            for (Payload payload : payloadList) {
                 payloadMapper.insert(payload);
             }
         }
@@ -54,6 +55,10 @@ public class UpdateController {
 
     @PostMapping("payload")
     public ResultBean insertPayload(@RequestBody Payload payload) {
+        String url = payload.getInterfaceUrl();
+        String params = payload.getParams();
+        payload.setInterfaceUrl(replaceString(url));
+        payload.setParams(replaceString(params));
         payloadMapper.insert(payload);
         return new ResultBean();
     }
@@ -70,5 +75,39 @@ public class UpdateController {
             e.printStackTrace();
         }
         return new ResultBean();
+    }
+
+    /**
+     * 替换字符
+     * @param s
+     * @return java.lang.String
+     * @author yezhendong
+     * @date 2020/4/7
+     */
+    private String replaceString(String s) {
+        if (s != null && !s.contains("${")) {
+            StringBuilder sb = new StringBuilder(s);
+            replace(sb, "sMiloTag=", Constant.S_MILO_TAG);
+            replace(sb, "sArea=", Constant.AREA_ID);
+            replace(sb, "sRoleId=", Constant.CHARACTER_NO);
+            replace(sb, "g_tk=", Constant.GTK);
+            replace(sb, "_=", Constant.RANDOM);
+            replace(sb, "r=", Constant.RANDOM);
+            replace(sb, "reqid=", Constant.UUID);
+            s = sb.toString();
+        }
+        return s;
+    }
+
+    private StringBuilder replace(StringBuilder sb, String key, String replaceString) {
+        if (sb.toString().contains(key)) {
+            int start = sb.indexOf(key) + key.length();
+            int end = sb.indexOf("&", start);
+            end = end == -1 ? sb.length() : end;
+            if (start != end) {
+                sb.replace(start, end, replaceString);
+            }
+        }
+        return sb;
     }
 }
