@@ -26,7 +26,7 @@ public class UpdateController implements Initializable {
     @FXML
     private Label versionLabel, timeLabel, contentLabel;
     @FXML
-    private Button versionButton;
+    private Button updateButton;
 
     public static Version version = null;
 
@@ -41,7 +41,7 @@ public class UpdateController implements Initializable {
     }
 
     public void update() {
-        versionButton.setDisable(true);
+        updateButton.setDisable(true);
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
             byte[] bytes = HttpUtil.doDownload(Constant.UPDATE_URL, null, null, null);
