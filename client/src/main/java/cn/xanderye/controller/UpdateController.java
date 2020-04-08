@@ -45,7 +45,7 @@ public class UpdateController implements Initializable {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
             byte[] bytes = HttpUtil.doDownload(Constant.UPDATE_URL, null, null, null);
-            File file = new File("version/temp.jar");
+            File file = new File("update/temp.jar");
             file.getParentFile().mkdirs();
             FileOutputStream fos = null;
             BufferedOutputStream bos = null;
@@ -68,7 +68,7 @@ public class UpdateController implements Initializable {
                 }
             }
             try {
-                Runtime.getRuntime().exec("cmd /c start .\\jre\\version.vbs");
+                Runtime.getRuntime().exec("cmd /c start .\\jre\\update.vbs");
                 Platform.exit();
             } catch (IOException e) {
                 e.printStackTrace();
