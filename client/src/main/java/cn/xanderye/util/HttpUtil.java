@@ -484,13 +484,12 @@ public class HttpUtil {
             if (headers.length > 0) {
                 Map<String, Object> headerMap = new HashMap<>(16);
                 for (String header : headers) {
-                    String[] value = header.split(":");
-                    String k = value[0].trim();
-                    String v = null;
-                    if (value.length == 2) {
-                        v = value[1].trim();
+                    int index = header.indexOf(":");
+                    if (index > 0) {
+                        String k = header.substring(0, index).trim();
+                        String v = header.substring(index + 1).trim();
+                        headerMap.put(k, v);
                     }
-                    headerMap.put(k, v);
                 }
                 return headerMap;
             }

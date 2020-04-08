@@ -207,9 +207,10 @@ public class DNFUtil {
 
     public static void main(String[] args) {
         Payload payload = new Payload();
-        payload.setMethod(1);
-        payload.setInterfaceUrl("http://x6m5.ams.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=dnf&iActivityId=290134&sServiceDepartment=group_3&sSDID=47786e4e3b93c3215f505b62458d6fb7&sMiloTag=${sMiloTag}&isXhrPost=true");
-        payload.setParams("gameId=&sArea=${areaId}&iSex=&sRoleId=${characterNo}&iGender=&sServiceType=dnf&objCustomMsg=&areaname=浙江一区&roleid=${characterNo}&rolelevel=&rolename=&areaid=&iActivityId=290134&iFlowId=647547&g_tk=${gTk}&e_code=0&g_code=0&eas_url=http%3A%2F%2Fdnf.qq.com%2Fcp%2Fa20200228video%2F&eas_refer=http%3A%2F%2Fdnf.qq.com%2Fcp%2Fa20200228videom%2F%3Freqid%3D${uuid}%26version%3D22&xhr=1&sServiceDepartment=group_3&xhrPostKey=${random}");
+        payload.setMethod(0);
+        payload.setInterfaceUrl("https://act.guanjia.qq.com/bin/act/comjoin_958.php");
+        payload.setHeaders("Referer:https://guanjia.qq.com/act/cop/202003dnf/?ADTAG=cop.dnfxsy.youxi.banner");
+        payload.setParams("giftId=6365&area_id=${areaId}&charac_no=${characterNo}&charac_name=${characterName}&callback=jQuery17205304917171066326_${random}&isopenid=1&_=${random}");
         String cookieString = "eas_sid=d1F5R8c6i2f3C5e6d5q6a8Q1Y2; pgv_info=ssid=s8540587158; ts_last=dnf.qq.com/gift.shtml; pgv_pvid=8221055408; ts_uid=161316628; gpmtips_cfg=%7B%22iSendApi%22%3A0%2C%22iShowCount%22%3A0%2C%22iOnlineCount%22%3A1%2C%22iSendOneCount%22%3A0%2C%22iShowAllCount%22%3A0%2C%22iHomeCount%22%3A0%7D; verifysession=h01addb4ef539fa31c3f3e2485474c6e485773fe1ae8e9c4da0caff85e6fa49c21bb59a90722a850f5e; pgv_pvi=5553643520; pgv_si=s960708608; _qpsvr_localtk=0.4778556224993864; recommend_init=1; rec_req_ctips_dnf=1; ptui_loginuin=202451454; uin=o0202451454; skey=@ZJk92ECvq; RK=eYhlDcgjd6; ptcz=44cc46edc34c7e7b5851800ce7202a743c927d45cea1eaaa6835f1e836f65e84; d7a9c0c275a4b8c94cf7397cc1d8bcc8=202451454";
         cookies = HttpUtil.formatCookies(cookieString);
         areaId = 11;
