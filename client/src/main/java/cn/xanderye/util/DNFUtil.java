@@ -132,7 +132,11 @@ public class DNFUtil {
         }
         result = UnicodeUtil.unicodeStrToString(result);
         List<String> cn = new ArrayList<>();
-        jsonObjIt(JSON.parseObject(result), cn);
+        try {
+            jsonObjIt(JSON.parseObject(result), cn);
+        } catch (Exception e) {
+            logger.error("msg", e);
+        }
         return cn.size() > 0 ? String.join(" ", cn) : result;
     }
 
