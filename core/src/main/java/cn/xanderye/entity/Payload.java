@@ -23,5 +23,7 @@ public class Payload {
 
     private String note;
 
+    private Integer times;
+
     private Integer timeout;
 }

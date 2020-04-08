@@ -7,6 +7,7 @@
         <result column="name" property="name"/>
         <result column="url" property="url"/>
         <result column="expired" property="expired"/>
+        <result column="auto" property="auto"/>
     </resultMap>
 
     <resultMap id="PayloadResultMap" type="cn.xanderye.entity.Activity">
@@ -50,7 +51,7 @@
     </select>
 
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO activity (name, url, expired) VALUES (#{name}, #{url}, #{expired})
+        INSERT INTO activity (name, url, expired, auto) VALUES (#{name}, #{url}, #{expired}, #{auto})
     </insert>
 
     <update id="expire">

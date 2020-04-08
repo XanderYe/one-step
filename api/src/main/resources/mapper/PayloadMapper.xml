@@ -9,11 +9,12 @@
         <result column="headers" property="headers"/>
         <result column="params" property="params"/>
         <result column="note" property="note"/>
+        <result column="times" property="times"/>
         <result column="timeout" property="timeout"/>
     </resultMap>
 
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO payload (activity_id, interface_url, method, headers, params, note, timeout)
-        VALUES (#{activityId}, #{interfaceUrl}, #{method}, #{headers}, #{params}, #{note}, #{timeout})
+        INSERT INTO payload (activity_id, interface_url, method, headers, params, note, times, timeout)
+        VALUES (#{activityId}, #{interfaceUrl}, #{method}, #{headers}, #{params}, #{note}, #{times}, #{timeout})
     </insert>
 </mapper>

@@ -33,6 +33,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Created on 2020/4/1.
@@ -89,28 +90,43 @@ public class MainController implements Initializable {
                 PropertyUtil.save("opt", (String) optBox.getValue());
                 PropertyUtil.save("characterName", characterName);
                 if (activityList != null && activityList.size() > 0) {
+                    ExecutorService startService = Executors.newFixedThreadPool(activityList.size());
                     for (Activity activity : activityList) {
                         List<Payload> payloadList = activity.getPayloadList();
                         if (payloadList != null && payloadList.size() > 0) {
-                            for (Payload payload : payloadList) {
-                                try {
-                                    String result = DNFUtil.get(payload);
-                                    logArea.appendText(payload.getNote() + "：" + result + "\n");
-                                    Integer timeout = payload.getTimeout();
-                                    if (timeout == null) {
-                                        timeout = 1;
+                            startService.execute(() -> {
+                                for (Payload payload : payloadList) {
+                                    if (payload.getTimes() == null) {
+                                        payload.setTimes(1);
                                     }
-                                    Thread.sleep(timeout * 1000);
-                                } catch (Exception e) {
-                                    logArea.appendText("未知错误\n");
-                                    logger.error("msg", e);
+                                    // 执行次数
+                                    for (int i = 0; i < payload.getTimes(); i++) {
+                                        try {
+                                            String result = DNFUtil.get(payload);
+                                            logArea.appendText(payload.getNote() + "：" + result + "\n");
+                                            Integer timeout = payload.getTimeout();
+                                            if (timeout == null) {
+                                                timeout = 1;
+                                            }
+                                            Thread.sleep(timeout * 1000);
+                                        } catch (Exception e) {
+                                            logArea.appendText("未知错误\n");
+                                            logger.error("msg", e);
+                                        }
+                                    }
                                 }
-                            }
+                            });
                         }
                     }
-                    logArea.appendText("执行完毕\n");
+                    startService.shutdown();
+                    try {
+                        startService.awaitTermination(10, TimeUnit.MINUTES);
+                        startButton.setDisable(false);
+                        logArea.appendText("执行完毕\n");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-                startButton.setDisable(false);
             });
             executorService.shutdown();
         }
@@ -165,8 +181,8 @@ public class MainController implements Initializable {
                         characterNameList.addAll(DNFUtil.characterList);
                     }
                 } catch (Exception e) {
-                 logger.error("msg", e);
-                 logArea.appendText("未知错误");
+                    logger.error("msg", e);
+                    logArea.appendText("未知错误");
                 }
             }
             ObservableList<String> roleOptions2 = FXCollections.observableArrayList(characterNameList.toArray(new String[0]));

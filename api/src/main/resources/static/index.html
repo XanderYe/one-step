@@ -21,6 +21,10 @@
         <h2>添加活动</h2>
         <p><span class="label">请输入活动名称：</span><input type="text" v-model="activity.name"></p>
         <p><span class="label">请输入活动地址：</span><input type="text" v-model="activity.url" style="width: 400px"></p>
+        <p><span class="label">是否自动执行：</span>
+            <label><input name="auto" type="radio" :value="1" v-model="activity.auto" checked="checked" />自动 </label>
+            <label><input name="auto" type="radio" :value="0" v-model="activity.auto" />手动 </label>
+        </p>
         <p>
             <button @click="addActivity">添加</button>
         </p>
@@ -43,6 +47,7 @@
                 <option :value="1">post</option>
             </select>
         </p>
+        <p><span class="label">请输入执行次数：</span><input type="number" min="1" max="99" v-model="payload.times"></p>
         <p><span class="label">请输入接口请求延迟：</span><input type="number" min="1" max="99" v-model="payload.timeout"></p>
         <p>
             <button @click="addPayload">添加</button>
@@ -66,7 +71,8 @@
         auth: "",
         activity: {
           name: "",
-          url: ""
+          url: "",
+          auto: 1,
         },
         activityList: [],
         payload: {
@@ -76,6 +82,7 @@
           headers: "",
           params: "",
           note: "",
+          times: 1,
           timeout: 1,
         },
         instance: null,
@@ -102,7 +109,8 @@
               this.getActivities();
               this.activity = {
                 name: "",
-                url: ""
+                url: "",
+                auto: 1
               }
             } else {
               alert(res.data.msg);
@@ -124,6 +132,7 @@
                 headers: "",
                 params: "",
                 note: "",
+                times: 1,
                 timeout: 1,
               }
             } else {
