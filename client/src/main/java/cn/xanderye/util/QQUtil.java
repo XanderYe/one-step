@@ -46,6 +46,6 @@ public class QQUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(sMiloTag("290824", "653546", "4744ED4679D7F501CCA69A136D934468"));
+        System.out.println(hash33("MJzx5HJAt9"));
     }
 }

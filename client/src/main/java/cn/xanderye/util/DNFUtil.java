@@ -14,7 +14,6 @@ import java.net.URLDecoder;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class DNFUtil {
     private static Logger logger = LoggerFactory.getLogger(DNFUtil.class);

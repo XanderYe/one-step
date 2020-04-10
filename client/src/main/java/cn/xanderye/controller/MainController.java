@@ -90,7 +90,8 @@ public class MainController implements Initializable {
                 PropertyUtil.save("opt", (String) optBox.getValue());
                 PropertyUtil.save("characterName", characterName);
                 if (activityList != null && activityList.size() > 0) {
-                    ExecutorService startService = Executors.newFixedThreadPool(activityList.size());
+                    int threadNumber = Math.min(activityList.size(), 10);
+                    ExecutorService startService = Executors.newFixedThreadPool(threadNumber);
                     for (Activity activity : activityList) {
                         List<Payload> payloadList = activity.getPayloadList();
                         if (payloadList != null && payloadList.size() > 0) {
