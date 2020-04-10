@@ -163,7 +163,8 @@ public class DNFUtil {
                     .replace(Constant.CHARACTER_NO, character.getCharacterNo())
                     .replace(Constant.CHARACTER_NAME, character.getCharacterName())
                     .replace(Constant.GTK, QQUtil.getGTK(skey))
-                    .replace(Constant.UUID, UUID.randomUUID().toString());
+                    .replace(Constant.UUID, UUID.randomUUID().toString())
+                    .replace(Constant.SKEY, skey);
         } catch (Exception e) {
             logger.error("msg", e);
         }
@@ -211,11 +212,11 @@ public class DNFUtil {
 
     public static void main(String[] args) {
         Payload payload = new Payload();
-        payload.setMethod(0);
-        payload.setInterfaceUrl("https://act.guanjia.qq.com/bin/act/comjoin_958.php");
-        payload.setHeaders("Referer:https://guanjia.qq.com/act/cop/202003dnf/?ADTAG=cop.dnfxsy.youxi.banner");
-        payload.setParams("giftId=6365&area_id=${areaId}&charac_no=${characterNo}&charac_name=${characterName}&callback=jQuery17205304917171066326_${random}&isopenid=1&_=${random}");
-        String cookieString = "eas_sid=d1F5R8c6i2f3C5e6d5q6a8Q1Y2; pgv_info=ssid=s8540587158; ts_last=dnf.qq.com/gift.shtml; pgv_pvid=8221055408; ts_uid=161316628; gpmtips_cfg=%7B%22iSendApi%22%3A0%2C%22iShowCount%22%3A0%2C%22iOnlineCount%22%3A1%2C%22iSendOneCount%22%3A0%2C%22iShowAllCount%22%3A0%2C%22iHomeCount%22%3A0%7D; verifysession=h01addb4ef539fa31c3f3e2485474c6e485773fe1ae8e9c4da0caff85e6fa49c21bb59a90722a850f5e; pgv_pvi=5553643520; pgv_si=s960708608; _qpsvr_localtk=0.4778556224993864; recommend_init=1; rec_req_ctips_dnf=1; ptui_loginuin=202451454; uin=o0202451454; skey=@ZJk92ECvq; RK=eYhlDcgjd6; ptcz=44cc46edc34c7e7b5851800ce7202a743c927d45cea1eaaa6835f1e836f65e84; d7a9c0c275a4b8c94cf7397cc1d8bcc8=202451454";
+        payload.setMethod(1);
+        payload.setInterfaceUrl("https://comm.ams.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=bb&iActivityId=287449&sServiceDepartment=group_k&sSDID=cd6f1fb61261d9d7c5fd3ee23dff1531&sMiloTag=${sMiloTag}&_=${random}");
+        //payload.setHeaders("Referer:https://guanjia.qq.com/act/cop/202003dnf/?ADTAG=cop.dnfxsy.youxi.banner");
+        payload.setParams("gameId=&sArea=${areaId}&iSex=&sRoleId=${characterNo}&iGender=&uin=1025251531&userId=341590315&token=P6nWtEhg&sRoleName=%2525E5%2525A4%2525A7%2525E7%25258B%252597%2525E5%25258F%252588%2525E7%2525A9%2525BA%2525E8%2525BE%2525A3&serverId=11&skey=MJzx5HJAt9&sServiceType=bb&objCustomMsg=&areaname=&roleid=&rolelevel=&rolename=&areaid=&iActivityId=287449&iFlowId=653926&g_tk=${gTk}&e_code=0&g_code=0&eas_url=http%3A%2F%2Fmwegame.qq.com%2Fact%2Fdnf%2Fweekjun%2Findex%2F&eas_refer=http%3A%2F%2Fnoreferrer%2F%3Freqid%3D${uuid}%26version%3D22&sServiceDepartment=group_k");
+        String cookieString = "pgv_pvi=5830253568; pgv_pvid=4927550240; RK=vRzwD9jHcy; ptcz=681f21135416a87f3e878f32007caf22d63891dc803a5369bd134e108ebb8fca; PTTosSysFirstTime=1584576000000; PTTuserFirstTime=1584576000000; PTTosFirstTime=1584576000000; eas_sid=Q1I5H8R4S5x938X8C8s3345916; tvfe_boss_uuid=51e9ee43199403dc; XWINDEXGREY=0; ptui_loginuin=315695355; sd_userid=48731585894669276; sd_cookie_crttime=1585894669276; isHostDate=18359; isOsSysDate=18359; isOsDate=18359; weekloop=12-0-14-15; o_cookie=315695355; pac_uid=1_315695355; pgv_info=ssid=s9183411091; ts_last=dnf.qq.com/gift.shtml; gpmtips_cfg=%7B%22iSendApi%22%3A0%2C%22iShowCount%22%3A0%2C%22iOnlineCount%22%3A2%2C%22iSendOneCount%22%3A0%2C%22iShowAllCount%22%3A0%2C%22iHomeCount%22%3A0%7D; _qpsvr_localtk=0.31929163310470354; pgv_si=s6881472512; rec_req_ctips_dnf=1; uin=o1025251531; skey=@o4t8O8HIS; verifysession=h0167b88a6d5b2c1958f8c4954138f5197f56c1420a203334e83efcb971b9a986f3e6276474b3bbbc8a; d7a9c0c275a4b8c94cf7397cc1d8bcc8=315695355";
         cookies = HttpUtil.formatCookies(cookieString);
         areaId = 11;
         character = new Character();

@@ -90,19 +90,29 @@ public class UpdateController {
             replace(sb, "sMiloTag=", Constant.S_MILO_TAG);
             replace(sb, "sArea=", Constant.AREA_ID);
             replace(sb, "sRoleId=", Constant.CHARACTER_NO);
+            replace(sb, "sRoleName=", Constant.CHARACTER_NAME);
             replace(sb, "g_tk=", Constant.GTK);
             replace(sb, "_=", Constant.RANDOM);
             replace(sb, "r=", Constant.RANDOM);
             replace(sb, "reqid=", Constant.UUID);
+            replace(sb, "reqid%3d", Constant.UUID, "%26");
+            replace(sb, "skey=", Constant.SKEY);
             s = sb.toString();
         }
         return s;
     }
 
     private StringBuilder replace(StringBuilder sb, String key, String replaceString) {
+        return replace(sb, key, replaceString, null);
+    }
+
+    private StringBuilder replace(StringBuilder sb, String key, String replaceString, String endString) {
+        if (endString == null) {
+            endString = "&";
+        }
         if (sb.toString().contains(key)) {
             int start = sb.indexOf(key) + key.length();
-            int end = sb.indexOf("&", start);
+            int end = sb.indexOf(endString, start);
             end = end == -1 ? sb.length() : end;
             if (start != end) {
                 sb.replace(start, end, replaceString);

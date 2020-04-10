@@ -33,4 +33,5 @@ public class Constant {
     public final static String CHARACTER_NAME = "${characterName}";
     public final static String GTK = "${gTk}";
     public final static String UUID = "${uuid}";
+    public final static String SKEY = "${skey}";
 }
