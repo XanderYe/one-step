@@ -23,6 +23,7 @@
             <result column="headers" property="headers"/>
             <result column="params" property="params"/>
             <result column="note" property="note"/>
+            <result column="times" property="times"/>
             <result column="timeout" property="timeout"/>
         </collection>
     </resultMap>
