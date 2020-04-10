@@ -183,7 +183,7 @@ public class MainController implements Initializable {
                     }
                 } catch (Exception e) {
                     logger.error("msg", e);
-                    logArea.appendText("未知错误");
+                    logArea.appendText("无法获取到角色信息，可能是cookie错误或者是cookie失效");
                 }
             }
             ObservableList<String> roleOptions2 = FXCollections.observableArrayList(characterNameList.toArray(new String[0]));
