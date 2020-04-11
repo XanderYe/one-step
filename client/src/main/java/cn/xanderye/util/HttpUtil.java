@@ -170,7 +170,7 @@ public class HttpUtil {
                     return EntityUtils.toString(resultEntity, CHARSET);
                 }
             } else {
-                throw new RuntimeException("error status code :" + statusCode);
+                throw new RuntimeException("请求失败，错误码 :" + statusCode);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -232,7 +232,7 @@ public class HttpUtil {
                     return EntityUtils.toString(resultEntity, CHARSET);
                 }
             } else {
-                throw new RuntimeException("error status code :" + statusCode);
+                throw new RuntimeException("请求失败，错误码 :" + statusCode);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -297,7 +297,7 @@ public class HttpUtil {
                     return EntityUtils.toByteArray(resultEntity);
                 }
             } else {
-                throw new RuntimeException("error status code :" + statusCode);
+                throw new RuntimeException("请求失败，错误码 :" + statusCode);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -351,7 +351,7 @@ public class HttpUtil {
                     return EntityUtils.toString(resultEntity, CHARSET);
                 }
             } else {
-                throw new RuntimeException("error status code :" + statusCode);
+                throw new RuntimeException("请求失败，错误码 :" + statusCode);
             }
         } catch (IOException e) {
             e.printStackTrace();

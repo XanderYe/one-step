@@ -111,7 +111,7 @@ public class MainController implements Initializable {
                                             }
                                             Thread.sleep(timeout * 1000);
                                         } catch (Exception e) {
-                                            logArea.appendText("未知错误\n");
+                                            logArea.appendText("接口访问失败\n");
                                             logger.error("msg", e);
                                         }
                                     }
