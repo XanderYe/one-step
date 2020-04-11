@@ -142,10 +142,13 @@ public class DNFUtil {
     public static String replaceUrl(String url, String paramString) {
         try {
             if (url.contains(Constant.S_MILO_TAG)) {
-                String iActivityId = StringUtils.substringBetween(paramString, "iActivityId=", "&");
-                String iFlowId = StringUtils.substringBetween(paramString, "iFlowId=", "&");
-                String openId = (String) cookies.get("openid");
-                url = url.replace(Constant.S_MILO_TAG, QQUtil.sMiloTag(iActivityId, iFlowId, openId));
+                String iActivityId = StringUtils.substringBetween(paramString, "iActivityId=", "&").trim();
+                String iFlowId = StringUtils.substringBetween(paramString, "iFlowId=", "&").trim();
+                String id = (String) cookies.get("openid");
+                if (id == null) {
+                    id = (String) cookies.get("uin");
+                }
+                url = url.replace(Constant.S_MILO_TAG, QQUtil.sMiloTag(iActivityId, iFlowId, id));
             }
             url = url.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()));
         } catch (Exception e) {

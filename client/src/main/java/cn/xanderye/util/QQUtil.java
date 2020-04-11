@@ -28,12 +28,12 @@ public class QQUtil {
         return System.currentTimeMillis() + String.valueOf(new Random().nextInt(100000));
     }
 
-    public static String sMiloTag(String iActivityId, String iFlowId, String openId) {
+    public static String sMiloTag(String iActivityId, String iFlowId, String id) {
         StringBuilder arrMiloTag = new StringBuilder();
         arrMiloTag.append("AMS-MILO-");
         arrMiloTag.append(iActivityId).append("-");
         arrMiloTag.append(iFlowId).append("-");
-        arrMiloTag.append(openId).append("-");
+        arrMiloTag.append(id).append("-");
         arrMiloTag.append(System.currentTimeMillis()).append("-");
         String sRandomMask = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         StringBuilder sRandomVal = new StringBuilder();
