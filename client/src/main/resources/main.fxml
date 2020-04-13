@@ -11,7 +11,7 @@
       <Button fx:id="startButton" layoutX="755.0" layoutY="50.0" mnemonicParsing="false" onAction="#start" prefHeight="37.0" prefWidth="110.0" text="一键领取" />
       <TextArea fx:id="logArea" editable="false" layoutX="312.0" layoutY="141.0" prefHeight="316.0" prefWidth="552.0" />
       <ListView fx:id="activityListView" layoutX="24.0" layoutY="141.0" prefHeight="316.0" prefWidth="270.0" />
-      <Label layoutX="804.0" layoutY="465.0" prefHeight="25.0" prefWidth="84.0" text="\@XanderYe" />
+      <Label alignment="CENTER_RIGHT" layoutX="418.0" layoutY="461.0" prefHeight="37.0" prefWidth="446.0" text="\@XanderYe 捐赠请邮寄 如灬花似月丶 浙江一区 100级剑帝" />
       <MenuBar prefWidth="920.0">
         <menus>
           <Menu mnemonicParsing="false" text="文件">
