@@ -3,21 +3,17 @@ package cn.xanderye.controller;
 import cn.xanderye.base.ResultBean;
 import cn.xanderye.constant.Constant;
 import cn.xanderye.entity.Activity;
-import cn.xanderye.entity.Log;
 import cn.xanderye.entity.Payload;
 import cn.xanderye.entity.Version;
 import cn.xanderye.mapper.ActivityMapper;
-import cn.xanderye.mapper.LogMapper;
 import cn.xanderye.mapper.PayloadMapper;
 import cn.xanderye.mapper.VersionMapper;
-import cn.xanderye.util.RequestUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -33,8 +29,6 @@ public class UpdateController {
     private PayloadMapper payloadMapper;
     @Autowired
     private VersionMapper versionMapper;
-    @Autowired
-    private LogMapper logMapper;
 
     @Value("${update.root}")
     private String uploadRoot;
@@ -80,17 +74,6 @@ public class UpdateController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ResultBean();
-    }
-
-    @PostMapping("log")
-    public ResultBean log(Log log, HttpServletRequest request) {
-        if (log.getCharacter() == null) {
-            throw new RuntimeException("参数不为空");
-        }
-        log.setIp(RequestUtil.getIpAddress(request));
-        log.setTime(new Date());
-        logMapper.insert(log);
         return new ResultBean();
     }
 

@@ -2,14 +2,20 @@ package cn.xanderye.controller;
 
 import cn.xanderye.base.ResultBean;
 import cn.xanderye.entity.Activity;
+import cn.xanderye.entity.Log;
 import cn.xanderye.entity.Version;
 import cn.xanderye.mapper.ActivityMapper;
+import cn.xanderye.mapper.LogMapper;
 import cn.xanderye.mapper.VersionMapper;
+import cn.xanderye.util.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -19,6 +25,8 @@ public class InfoController {
     private ActivityMapper activityMapper;
     @Autowired
     private VersionMapper versionMapper;
+    @Autowired
+    private LogMapper logMapper;
 
     @GetMapping("getActivities")
     public ResultBean getActivities() {
@@ -35,5 +43,16 @@ public class InfoController {
     @GetMapping("version")
     public Version getLaseVersion() {
         return versionMapper.getLastVersion();
+    }
+
+    @PostMapping("log")
+    public ResultBean log(Log log, HttpServletRequest request) {
+        if (log.getCharacter() == null) {
+            throw new RuntimeException("参数不为空");
+        }
+        log.setIp(RequestUtil.getIpAddress(request));
+        log.setTime(new Date());
+        logMapper.insert(log);
+        return new ResultBean();
     }
 }
