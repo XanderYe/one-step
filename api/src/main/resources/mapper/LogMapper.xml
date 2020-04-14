@@ -10,6 +10,6 @@
     </resultMap>
 
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO version (ip, area, `character`, `time`) VALUES (#{ip}, #{area}, #{character}, #{time})
+        INSERT INTO log (ip, area, `character`, `time`) VALUES (#{ip}, #{area}, #{character}, #{time})
     </insert>
 </mapper>

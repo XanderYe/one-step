@@ -168,10 +168,13 @@ public class DNFUtil {
      * @date 2020/4/14
      */
     public static void log() {
-        Map<String, Object> params = new HashMap<>();
-        params.put("area", character.getArea());
-        params.put("character", character.getCharacterName());
-        HttpUtil.doPost(Constant.LOG_URL, params);
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("area", character.getArea());
+            params.put("character", character.getCharacterName());
+            HttpUtil.doPost(Constant.LOG_URL, params);
+        } catch (Exception ignored){
+        }
     }
 
     private static String replaceUrl(String url, String paramString) {

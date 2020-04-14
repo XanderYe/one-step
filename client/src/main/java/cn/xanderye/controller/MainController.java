@@ -82,7 +82,6 @@ public class MainController implements Initializable {
         if ("请选择角色".equals(characterName)) {
             logArea.appendText("请选择角色\n");
         } else {
-            DNFUtil.log();
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.execute(() -> {
                 startButton.setDisable(true);
@@ -92,6 +91,7 @@ public class MainController implements Initializable {
                 PropertyUtil.save("area", (String) areaBox.getValue());
                 PropertyUtil.save("opt", (String) optBox.getValue());
                 PropertyUtil.save("characterName", characterName);
+                DNFUtil.log();
                 if (activityList != null && activityList.size() > 0) {
                     int threadNumber = Math.min(activityList.size(), 10);
                     ExecutorService startService = Executors.newFixedThreadPool(threadNumber);
