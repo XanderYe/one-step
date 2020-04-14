@@ -17,10 +17,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -33,7 +35,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * Created on 2020/4/1.
@@ -322,7 +323,89 @@ public class MainController implements Initializable {
         UpdateController.version = version;
     }
 
-    public void alert(String msg) {
+    /**
+     * 心悦批量兑换工具
+     *
+     * @param
+     * @return void
+     * @author XanderYe
+     * @date 2020/4/14
+     */
+    public void exchange() {
+        Stage stage = new Stage();
+        HBox root = new HBox();
+        root.setPadding(new Insets(20, 0, 20, 20));
+        Map<String, String> flowMap = new HashMap<>(16);
+        flowMap.put("成就点装备提升礼盒", "512469");
+        flowMap.put("成就点引导石", "512474");
+        flowMap.put("勇士币装备提升礼盒", "513251");
+        flowMap.put("勇士币引导石", "616809");
+        ComboBox flowBox = new ComboBox();
+        ObservableList<String> flowIds = FXCollections.observableArrayList(flowMap.keySet().toArray(new String[0]));
+        flowBox.setItems(flowIds);
+        flowBox.getSelectionModel().selectFirst();
+        root.getChildren().add(flowBox);
+        Label label2 = new Label();
+        label2.setText("次数：");
+        label2.setPrefWidth(60);
+        label2.setPrefHeight(20);
+        label2.setAlignment(Pos.CENTER_RIGHT);
+        TextField times = new TextField();
+        times.setPrefWidth(80);
+        times.setPrefHeight(20);
+        root.getChildren().add(label2);
+        root.getChildren().add(times);
+        Button exchange = new Button();
+        exchange.setText("兑换");
+        HBox.setMargin(exchange, new Insets(0, 0, 0, 20));
+        root.getChildren().add(exchange);
+        exchange.setOnAction(event -> {
+            exchange.setDisable(true);
+            String characterName = (String) characterBox.getValue();
+            DNFUtil.character = DNFUtil.characterMap.get(characterName);
+            String flowString = (String) flowBox.getValue();
+            String flowId = flowMap.get(flowString);
+            Payload payload = new Payload();
+            payload.setMethod(1);
+            payload.setInterfaceUrl("http://act.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=tgclub&iActivityId=166962&sServiceDepartment=xinyue&sSDID=26ebd6b381f853ff7ecc1def1a43de7a&sMiloTag=${sMiloTag}&isXhrPost=true");
+            payload.setParams("gameId=&sArea=&iSex=&sRoleId=&iGender=&sServiceType=tgclub&objCustomMsg=&areaname=&roleid=&rolelevel=&rolename=&areaid=&iActivityId=166962&iFlowId=" + flowId + "&g_tk=${gTk}&e_code=0&g_code=0&eas_url=http%3A%2F%2Fxinyue.qq.com%2Fact%2Fa20181101rights%2F&eas_refer=http%3A%2F%2Fnoreferrer%2F%3Freqid%3D${uuid}%26version%3D22&xhr=1&sServiceDepartment=xinyue&xhrPostKey=xhr_${random}");
+            if ("512469".equals(flowId)) {
+                payload.setParams(payload.getParams() + "&package_id=702218");
+            }
+            String timesString = times.getText();
+            int t;
+            try {
+                t = Integer.parseInt(timesString);
+            } catch (Exception e) {
+                t = 1;
+            }
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            int finalT = t;
+            executorService.execute(() -> {
+                try {
+                    for (int i = 0; i < finalT; i++) {
+                        if (i > 0) {
+                            Thread.sleep(5000);
+                        }
+                        String result = DNFUtil.get(payload);
+                        Platform.runLater(() -> logArea.appendText("兑换" + flowString + "：" + result + "\n"));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    logArea.appendText("执行完毕\n");
+                    exchange.setDisable(false);
+                }
+            });
+        });
+        Scene scene = new Scene(root, 400, 60);
+        stage.setScene(scene);
+        stage.setTitle("心悦批量兑换");
+        stage.setResizable(false);
+        stage.show();
+    }
+
+    private void alert(String msg) {
         Stage stage = new Stage();
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(20, 30, 30, 30));

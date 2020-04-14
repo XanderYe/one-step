@@ -19,6 +19,11 @@
               <MenuItem mnemonicParsing="false" onAction="#close" text="关闭" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="工具">
+                <items>
+                    <MenuItem mnemonicParsing="false" onAction="#exchange" text="心悦批量兑换" />
+                </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="帮助">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#home" text="主页" />
