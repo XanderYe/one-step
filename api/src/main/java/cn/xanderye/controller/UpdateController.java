@@ -96,6 +96,7 @@ public class UpdateController {
             replace(sb, "r=", Constant.RANDOM);
             replace(sb, "reqid=", Constant.UUID);
             replace(sb, "reqid%3d", Constant.UUID, "%26");
+            replace(sb, "reqid%3D", Constant.UUID, "%26");
             replace(sb, "skey=", Constant.SKEY);
             s = sb.toString();
         }
