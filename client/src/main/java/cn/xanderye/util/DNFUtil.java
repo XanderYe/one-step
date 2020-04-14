@@ -107,6 +107,33 @@ public class DNFUtil {
     }
 
     /**
+     * 获取心悦勇士币和成就点
+     * @param
+     * @return java.lang.String
+     * @author XanderYe
+     * @date 2020/4/14
+     */
+    public static String getXinYuePoints() {
+        Payload payload = new Payload();
+        payload.setInterfaceUrl("http://act.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=tgclub&iActivityId=166962&sServiceDepartment=xinyue&sSDID=26ebd6b381f853ff7ecc1def1a43de7a&sMiloTag=${sMiloTag}&isXhrPost=true");
+        payload.setParams("iActivityId=166962&iFlowId=512411&g_tk=${gTk}&e_code=0&g_code=0&eas_url=http%3A%2F%2Fxinyue.qq.com%2Fact%2Fa20181101rights%2F&eas_refer=http%3A%2F%2Fxinyue.qq.com%2Fact%2Fa20181101rights%2F%3Freqid%3D${uuid}%26version%3D22&xhr=1&sServiceDepartment=xinyue&sServiceType=tgclub&xhrPostKey=xhr_${random}");
+        payload.setMethod(1);
+        String data = "勇士币：{0}, 成就点：{1}";
+        String coin = "0";
+        String point = "0";
+        try {
+            String result = get(payload);
+            JSONObject res = JSON.parseObject(result);
+            JSONObject modRet = res.getJSONObject("modRet");
+            coin = modRet.getString("sOutValue2");
+            point = modRet.getString("sOutValue1");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data.replace("{0}", coin).replace("{1}", point);
+    }
+
+    /**
      * 领奖励方法
      *
      * @param payload
@@ -162,8 +189,8 @@ public class DNFUtil {
         try {
             string = string.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()))
                     .replace(Constant.AREA_ID, String.valueOf(areaId))
-                    .replace(Constant.CHARACTER_NO, character.getCharacterNo())
-                    .replace(Constant.CHARACTER_NAME, character.getCharacterName())
+                    .replace(Constant.CHARACTER_NO, character == null ? "" : character.getCharacterNo())
+                    .replace(Constant.CHARACTER_NAME, character == null ? "" : character.getCharacterName())
                     .replace(Constant.GTK, QQUtil.getGTK(skey))
                     .replace(Constant.UUID, UUID.randomUUID().toString())
                     .replace(Constant.SKEY, skey);

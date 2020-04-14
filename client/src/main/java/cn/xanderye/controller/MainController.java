@@ -332,7 +332,9 @@ public class MainController implements Initializable {
      * @date 2020/4/14
      */
     public void exchange() {
+        String data = DNFUtil.getXinYuePoints();
         Stage stage = new Stage();
+        stage.setTitle(data);
         HBox root = new HBox();
         root.setPadding(new Insets(20, 0, 20, 20));
         Map<String, String> flowMap = new HashMap<>(16);
@@ -400,7 +402,6 @@ public class MainController implements Initializable {
         });
         Scene scene = new Scene(root, 400, 60);
         stage.setScene(scene);
-        stage.setTitle("心悦批量兑换");
         stage.setResizable(false);
         stage.show();
     }
