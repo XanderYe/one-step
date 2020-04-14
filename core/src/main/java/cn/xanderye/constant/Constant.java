@@ -29,7 +29,7 @@ public class Constant {
     /**
      * 日志
      */
-    public final static String LOG_URL = "https://www.xanderye.cn/onestep/save/log";
+    public final static String LOG_URL = "https://www.xanderye.cn/onestep/info/log";
 
     public final static String S_MILO_TAG = "${sMiloTag}";
     public final static String RANDOM = "${random}";
