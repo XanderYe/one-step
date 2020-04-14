@@ -12,7 +12,7 @@
         SELECT * FROM version ORDER BY id DESC LIMIT 1
     </select>
 
-    <insert id="insert">
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO version (version, `desc`, `date`) VALUES (#{version}, #{desc}, #{date})
     </insert>
 </mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xanderye.mapper.LogMapper">
+    <resultMap id="BaseResultMap" type="cn.xanderye.entity.Log">
+        <id column="id" property="id"/>
+        <result column="ip" property="ip"/>
+        <result column="area" property="area"/>
+        <result column="character" property="character"/>
+        <result column="time" property="time"/>
+    </resultMap>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO version (ip, area, `character`, `time`) VALUES (#{ip}, #{area}, #{character}, #{time})
+    </insert>
+</mapper>

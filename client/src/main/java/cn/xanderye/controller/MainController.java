@@ -2,6 +2,7 @@ package cn.xanderye.controller;
 
 import cn.xanderye.constant.Constant;
 import cn.xanderye.entity.Activity;
+import cn.xanderye.entity.Character;
 import cn.xanderye.entity.Payload;
 import cn.xanderye.entity.Version;
 import cn.xanderye.util.DNFUtil;
@@ -81,10 +82,11 @@ public class MainController implements Initializable {
         if ("请选择角色".equals(characterName)) {
             logArea.appendText("请选择角色\n");
         } else {
+            DNFUtil.log();
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.execute(() -> {
                 startButton.setDisable(true);
-                DNFUtil.character = DNFUtil.characterMap.get(characterName);
+                DNFUtil.setCharacter(DNFUtil.characterMap.get(characterName));
                 logArea.appendText("角色名称：" + DNFUtil.character.getCharacterName() + "\n");
                 PropertyUtil.save("uin", (String) DNFUtil.cookies.get("uin"));
                 PropertyUtil.save("area", (String) areaBox.getValue());
@@ -176,7 +178,8 @@ public class MainController implements Initializable {
             List<String> characterNameList = new ArrayList<>();
             if (!"请选择服务器".equals(newValue)) {
                 Integer areaId = areaIdMap.get(newValue);
-                DNFUtil.areaId = areaId;
+                DNFUtil.character.setArea((String) newValue);
+                DNFUtil.character.setAreaId(areaId);
                 try {
                     DNFUtil.getCharacterList(areaId);
                     if (DNFUtil.characterList != null) {
@@ -364,7 +367,7 @@ public class MainController implements Initializable {
         exchange.setOnAction(event -> {
             exchange.setDisable(true);
             String characterName = (String) characterBox.getValue();
-            DNFUtil.character = DNFUtil.characterMap.get(characterName);
+            DNFUtil.setCharacter(DNFUtil.characterMap.get(characterName));
             String flowString = (String) flowBox.getValue();
             String flowId = flowMap.get(flowString);
             Payload payload = new Payload();
