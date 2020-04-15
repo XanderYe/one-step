@@ -200,8 +200,8 @@ public class DNFUtil {
         try {
             string = string.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()))
                     .replace(Constant.AREA_ID, String.valueOf(character.getAreaId()))
-                    .replace(Constant.CHARACTER_NO, character == null ? "" : character.getCharacterNo())
-                    .replace(Constant.CHARACTER_NAME, character == null ? "" : character.getCharacterName())
+                    .replace(Constant.CHARACTER_NO, character.getCharacterNo() == null ? "" : character.getCharacterNo())
+                    .replace(Constant.CHARACTER_NAME, character.getCharacterName() == null ? "" : character.getCharacterName())
                     .replace(Constant.GTK, QQUtil.getGTK(skey))
                     .replace(Constant.UUID, UUID.randomUUID().toString())
                     .replace(Constant.SKEY, skey);
