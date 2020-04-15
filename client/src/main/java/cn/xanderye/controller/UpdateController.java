@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 
 import java.io.*;
 import java.net.URL;
@@ -27,6 +28,8 @@ public class UpdateController implements Initializable {
     private Label versionLabel, timeLabel, contentLabel;
     @FXML
     private Button updateButton;
+    @FXML
+    private ProgressBar progressBar;
 
     public static Version version = null;
 
@@ -42,9 +45,10 @@ public class UpdateController implements Initializable {
 
     public void update() {
         updateButton.setDisable(true);
+        progressBar.setVisible(true);
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
-            byte[] bytes = HttpUtil.doDownload(Constant.UPDATE_URL, null, null, null);
+            byte[] bytes = HttpUtil.doDownloadProgress(Constant.UPDATE_URL, null, null, null, progressBar);
             File file = new File("update/temp.jar");
             file.getParentFile().mkdirs();
             FileOutputStream fos = null;

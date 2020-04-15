@@ -1,9 +1,7 @@
 package cn.xanderye.util;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
+import javafx.scene.control.ProgressBar;
+import org.apache.http.*;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -25,7 +23,9 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.SSLContext;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -295,6 +295,82 @@ public class HttpUtil {
                 resultEntity = response.getEntity();
                 if (resultEntity != null) {
                     return EntityUtils.toByteArray(resultEntity);
+                }
+            } else {
+                throw new RuntimeException("请求失败，错误码 :" + statusCode);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultEntity != null) {
+                    EntityUtils.consume(resultEntity);
+                }
+                if (response != null) {
+                    response.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 下载显示进度条
+     * @param url
+     * @param headers
+     * @param cookies
+     * @param params
+     * @param progressBar
+     * @return byte[]
+     * @author XanderYe
+     * @date 2020/4/15
+     */
+    public static byte[] doDownloadProgress(String url, Map<String, Object> headers, Map<String, Object> cookies, Map<String, Object> params, ProgressBar progressBar) {
+        // 拼接参数
+        if (params != null && !params.isEmpty()) {
+            List<NameValuePair> pairs = new ArrayList<>(params.size());
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                String value = entry.getValue() == null ? null : (entry.getValue()).toString();
+                if (value != null) {
+                    pairs.add(new BasicNameValuePair(entry.getKey(), value));
+                }
+            }
+            try {
+                String parameters = EntityUtils.toString(new UrlEncodedFormEntity(pairs, CHARSET));
+                String symbol = url.contains("?") ? "&" : "?";
+                // 判断是否已带参数
+                url += symbol + parameters;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        HttpGet httpGet = new HttpGet(url);
+        // 添加headers
+        addHeaders(httpGet, headers);
+        // 添加cookies
+        addCookies(httpGet, cookies);
+        CloseableHttpResponse response = null;
+        HttpEntity resultEntity = null;
+        try {
+            HttpClientContext httpClientContext = new HttpClientContext();
+            response = httpClient.execute(httpGet, httpClientContext);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode == HttpStatus.SC_OK) {
+                InputStream is = response.getEntity().getContent();
+                Header[] hds = response.getHeaders("Content-Length");
+                String contentLength = hds[0].getValue();
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                byte[] bytes = new byte[1024];
+                int length;
+                int size = contentLength == null ? 3000000 : Integer.parseInt(contentLength);
+                int progress = 0;
+                while ((length = is.read(bytes)) != -1) {
+                    bos.write(bytes, 0, length);
+                    progress += length;
+                    float pg = (float) progress / (float) size;
+                    progressBar.setProgress(pg);
                 }
             } else {
                 throw new RuntimeException("请求失败，错误码 :" + statusCode);
