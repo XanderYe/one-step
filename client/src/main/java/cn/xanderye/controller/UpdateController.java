@@ -73,7 +73,7 @@ public class UpdateController implements Initializable {
             }
             try {
                 Runtime.getRuntime().exec("cmd /c start .\\jre\\update.vbs");
-                Platform.exit();
+                System.exit(-1);
             } catch (IOException e) {
                 e.printStackTrace();
             }
