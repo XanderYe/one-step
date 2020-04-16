@@ -372,6 +372,7 @@ public class HttpUtil {
                     float pg = (float) progress / (float) size;
                     progressBar.setProgress(pg);
                 }
+                return bos.toByteArray();
             } else {
                 throw new RuntimeException("请求失败，错误码 :" + statusCode);
             }
