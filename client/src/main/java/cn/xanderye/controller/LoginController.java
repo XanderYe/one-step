@@ -2,16 +2,21 @@ package cn.xanderye.controller;
 
 import cn.xanderye.Login;
 import cn.xanderye.Main;
+import cn.xanderye.constant.Constant;
+import cn.xanderye.entity.Version;
 import cn.xanderye.util.DNFUtil;
 import cn.xanderye.util.HttpUtil;
 import cn.xanderye.util.QQUtil;
+import com.alibaba.fastjson.JSON;
 import com.sun.javafx.robot.impl.FXRobotHelper;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -78,6 +83,32 @@ public class LoginController implements Initializable {
         if (file.exists()) {
             file.delete();
         }
+
+        // 检查更新
+        ScheduledExecutorService updateService = Executors.newSingleThreadScheduledExecutor();
+        updateService.schedule(() -> {
+            String result = HttpUtil.doGet(Constant.CHECK_URL, null);
+            Version version = JSON.parseObject(result, Version.class);
+            UpdateController.version = version;
+            if (UpdateController.version != null) {
+                if (!Constant.VERSION.equals(UpdateController.version.getVersion())) {
+                    Platform.runLater(() -> {
+                        try {
+                            Stage stage = new Stage();
+                            Parent root = FXMLLoader.load(getClass().getResource("/update.fxml"));
+                            stage.setTitle("检查到更新");
+                            Scene scene = new Scene(root, 400, 200);
+                            stage.setScene(scene);
+                            stage.setResizable(false);
+                            stage.show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            }
+            updateService.shutdown();
+        }, 3, TimeUnit.SECONDS);
     }
 
     public void getCookie() {

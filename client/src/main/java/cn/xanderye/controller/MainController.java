@@ -234,30 +234,6 @@ public class MainController implements Initializable {
             logArea.appendText("获取活动信息错误\n");
             logger.error("msg", e);
         }
-
-        // 检查更新
-        ScheduledExecutorService updateService = Executors.newSingleThreadScheduledExecutor();
-        updateService.schedule(() -> {
-            checkUpdate();
-            if (UpdateController.version != null) {
-                if (!Constant.VERSION.equals(UpdateController.version.getVersion())) {
-                    Platform.runLater(() -> {
-                        try {
-                            Stage stage = new Stage();
-                            Parent root = FXMLLoader.load(getClass().getResource("/update.fxml"));
-                            stage.setTitle("检查到更新");
-                            Scene scene = new Scene(root, 400, 200);
-                            stage.setScene(scene);
-                            stage.setResizable(false);
-                            stage.show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
-            }
-            updateService.shutdown();
-        }, 3, TimeUnit.SECONDS);
     }
 
     public void close() {
@@ -290,7 +266,8 @@ public class MainController implements Initializable {
     }
 
     public void update() {
-        checkUpdate();
+        String result = HttpUtil.doGet(Constant.CHECK_URL, null);
+        UpdateController.version = JSON.parseObject(result, Version.class);
         if (UpdateController.version != null) {
             if (!Constant.VERSION.equals(UpdateController.version.getVersion())) {
                 try {
@@ -310,20 +287,6 @@ public class MainController implements Initializable {
         } else {
             alert("检查更新失败");
         }
-    }
-
-    /**
-     * 检查更新
-     *
-     * @param
-     * @return void
-     * @author XanderYe
-     * @date 2020/4/2
-     */
-    private void checkUpdate() {
-        String result = HttpUtil.doGet(Constant.CHECK_URL, null);
-        Version version = JSON.parseObject(result, Version.class);
-        UpdateController.version = version;
     }
 
     /**
