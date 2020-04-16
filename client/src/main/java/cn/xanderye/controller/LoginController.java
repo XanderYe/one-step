@@ -88,8 +88,7 @@ public class LoginController implements Initializable {
         ScheduledExecutorService updateService = Executors.newSingleThreadScheduledExecutor();
         updateService.schedule(() -> {
             String result = HttpUtil.doGet(Constant.CHECK_URL, null);
-            Version version = JSON.parseObject(result, Version.class);
-            UpdateController.version = version;
+            UpdateController.version = JSON.parseObject(result, Version.class);
             if (UpdateController.version != null) {
                 if (!Constant.VERSION.equals(UpdateController.version.getVersion())) {
                     Platform.runLater(() -> {

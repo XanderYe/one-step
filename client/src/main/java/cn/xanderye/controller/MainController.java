@@ -366,7 +366,7 @@ public class MainController implements Initializable {
                 }
             });
         });
-        Scene scene = new Scene(root, 400, 60);
+        Scene scene = new Scene(root, 450, 60);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();

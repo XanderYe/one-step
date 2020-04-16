@@ -7,9 +7,9 @@
 <AnchorPane fx:id="root" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.xanderye.controller.LoginController">
    <children>
       <ImageView fx:id="qrImage" fitHeight="111.0" fitWidth="111.0" layoutX="95.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true" />
-      <Label alignment="CENTER" layoutX="59.0" layoutY="205.0" prefHeight="30.0" prefWidth="182.0" text="请QQ扫码登录或填入cookie" />
+      <Label alignment="CENTER" layoutX="26.0" layoutY="205.0" prefHeight="30.0" prefWidth="251.0" text="请QQ扫码登录或填入cookie" />
       <TextArea fx:id="cookieText" layoutX="25.0" layoutY="249.0" prefHeight="74.0" prefWidth="251.0" wrapText="true" />
-      <Label fx:id="msg" alignment="CENTER" layoutX="59.0" layoutY="163.0" prefHeight="30.0" prefWidth="182.0" text="二维码未失效" />
-      <Button alignment="CENTER" layoutX="50.0" layoutY="342.0" onAction="#getCookie" prefHeight="30.0" prefWidth="200.0" text="点我打开cookie获取教程" />
+      <Label fx:id="msg" alignment="CENTER" layoutX="25.0" layoutY="163.0" prefHeight="30.0" prefWidth="251.0" text="二维码未失效" />
+      <Button alignment="CENTER" layoutX="27.0" layoutY="342.0" onAction="#getCookie" prefHeight="30.0" prefWidth="251.0" text="点我打开cookie获取教程" />
    </children>
 </AnchorPane>
