@@ -216,7 +216,7 @@ public class MainController implements Initializable {
                 List<String> manualList = new ArrayList<>();
                 for (Activity activity : activityList) {
                     activityMap.put(activity.getName(), activity.getUrl());
-                    if (activity.getAuto()) {
+                    if (activity.getAuto() != null && activity.getAuto()) {
                         autoList.add(activity.getName());
                     } else {
                         manualList.add(activity.getName());
