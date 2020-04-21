@@ -15,6 +15,7 @@
         <result column="name" property="name"/>
         <result column="url" property="url"/>
         <result column="expired" property="expired"/>
+        <result column="auto" property="auto"/>
         <collection property="payloadList" ofType="cn.xanderye.entity.Payload">
             <id column="payload_id" property="id"/>
             <result column="activity_id" property="activityId"/>
