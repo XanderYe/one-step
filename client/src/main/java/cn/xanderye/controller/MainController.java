@@ -2,7 +2,6 @@ package cn.xanderye.controller;
 
 import cn.xanderye.constant.Constant;
 import cn.xanderye.entity.Activity;
-import cn.xanderye.entity.Character;
 import cn.xanderye.entity.Payload;
 import cn.xanderye.entity.Version;
 import cn.xanderye.util.DNFUtil;
@@ -34,7 +33,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -51,7 +49,7 @@ public class MainController implements Initializable {
     @FXML
     private ComboBox characterBox;
     @FXML
-    private ListView activityListView;
+    private ListView autoListView, manualListView;
     @FXML
     private TextArea logArea;
     @FXML
@@ -214,14 +212,31 @@ public class MainController implements Initializable {
             JSONArray data = resultJson.getJSONArray("data");
             if (data != null) {
                 activityList = JSONObject.parseArray(JSONObject.toJSONString(data), Activity.class);
-                List<String> activityNameList = new ArrayList<>();
+                List<String> autoList = new ArrayList<>();
+                List<String> manualList = new ArrayList<>();
                 for (Activity activity : activityList) {
                     activityMap.put(activity.getName(), activity.getUrl());
-                    activityNameList.add(activity.getName());
+                    if (activity.getAuto()) {
+                        autoList.add(activity.getName());
+                    } else {
+                        manualList.add(activity.getName());
+                    }
                 }
-                ObservableList<String> list = FXCollections.observableArrayList(activityNameList.toArray(new String[0]));
-                activityListView.setItems(list);
-                activityListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                ObservableList<String> autoObservableList = FXCollections.observableArrayList(autoList.toArray(new String[0]));
+                ObservableList<String> manualObservableList = FXCollections.observableArrayList(manualList.toArray(new String[0]));
+                // 自动活动列表
+                autoListView.setItems(autoObservableList);
+                autoListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                    // 调用浏览器打开网页
+                    try {
+                        Runtime.getRuntime().exec("cmd /c start " + activityMap.get(newValue));
+                    } catch (IOException e) {
+                        logger.error("msg", e);
+                    }
+                });
+                // 手动活动列表
+                manualListView.setItems(manualObservableList);
+                manualListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                     // 调用浏览器打开网页
                     try {
                         Runtime.getRuntime().exec("cmd /c start " + activityMap.get(newValue));
