@@ -83,9 +83,9 @@ public class MainController implements Initializable {
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.execute(() -> {
                 startButton.setDisable(true);
-                DNFUtil.setCharacter(DNFUtil.characterMap.get(characterName));
-                logArea.appendText("角色名称：" + DNFUtil.character.getCharacterName() + "\n");
-                PropertyUtil.save("uin", (String) DNFUtil.cookies.get("uin"));
+                DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
+                logArea.appendText("角色名称：" + DNFUtil.user.getCharacterName() + "\n");
+                PropertyUtil.save("uin", DNFUtil.user.getUin());
                 PropertyUtil.save("area", (String) areaBox.getValue());
                 PropertyUtil.save("opt", (String) optBox.getValue());
                 PropertyUtil.save("characterName", characterName);
@@ -179,8 +179,8 @@ public class MainController implements Initializable {
             List<String> characterNameList = new ArrayList<>();
             if (!"请选择服务器".equals(newValue)) {
                 Integer areaId = areaIdMap.get(newValue);
-                DNFUtil.character.setArea((String) newValue);
-                DNFUtil.character.setAreaId(areaId);
+                DNFUtil.user.setArea((String) newValue);
+                DNFUtil.user.setAreaId(areaId);
                 try {
                     DNFUtil.getCharacterList(areaId);
                     if (DNFUtil.characterList != null) {
@@ -348,7 +348,7 @@ public class MainController implements Initializable {
         exchange.setOnAction(event -> {
             exchange.setDisable(true);
             String characterName = (String) characterBox.getValue();
-            DNFUtil.setCharacter(DNFUtil.characterMap.get(characterName));
+            DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
             String flowString = (String) flowBox.getValue();
             String flowId = flowMap.get(flowString);
             Payload payload = new Payload();

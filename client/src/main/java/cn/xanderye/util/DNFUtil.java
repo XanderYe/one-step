@@ -2,6 +2,7 @@ package cn.xanderye.util;
 
 import cn.xanderye.constant.Constant;
 import cn.xanderye.entity.Character;
+import cn.xanderye.entity.User;
 import cn.xanderye.entity.Payload;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +43,7 @@ public class DNFUtil {
     /**
      * 已选角色
      */
-    public static Character character = new Character();
+    public static User user = new User();
 
     /**
      * 中文正则表达式
@@ -83,8 +85,12 @@ public class DNFUtil {
         Map<String, Object> headers = new HashMap<>();
         headers.put("Referer", "https://dnf.qq.com/gift.shtml");
         String result = HttpUtil.doGet(url, headers, cookies, null);
-        result = URLDecoder.decode(result, "UTF-8");
+        String checkParam = StringUtils.substringBetween(result, "checkparam:'", "',md5str");
+        String md5str = StringUtils.substringBetween(result, "md5str:'", "',infostr");
+        user.setCheckParam(checkParam);
+        user.setMd5Str(md5str);
         result = StringUtils.substringBetween(result, "data:'", "&_webplat_msg_code");
+        result = URLDecoder.decode(result, "UTF-8");
         String[] roles = result.split("[|]");
         characterMap = new HashMap<>(16);
         characterList = new ArrayList<>();
@@ -103,6 +109,7 @@ public class DNFUtil {
 
     /**
      * 获取心悦勇士币和成就点
+     *
      * @param
      * @return java.lang.String
      * @author XanderYe
@@ -163,6 +170,7 @@ public class DNFUtil {
 
     /**
      * 日志
+     *
      * @param
      * @return void
      * @date 2020/4/14
@@ -170,10 +178,10 @@ public class DNFUtil {
     public static void log() {
         try {
             Map<String, Object> params = new HashMap<>();
-            params.put("area", character.getArea());
-            params.put("character", character.getCharacterName());
+            params.put("area", user.getArea());
+            params.put("character", user.getCharacterName());
             HttpUtil.doPost(Constant.LOG_URL, params);
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
         }
     }
 
@@ -182,9 +190,9 @@ public class DNFUtil {
             if (url.contains(Constant.S_MILO_TAG)) {
                 String iActivityId = StringUtils.substringBetween(paramString, "iActivityId=", "&").trim();
                 String iFlowId = StringUtils.substringBetween(paramString, "iFlowId=", "&").trim();
-                String id = (String) cookies.get("openid");
+                String id = user.getOpenId();
                 if (id == null) {
-                    id = (String) cookies.get("uin");
+                    id = user.getUin();
                 }
                 url = url.replace(Constant.S_MILO_TAG, QQUtil.sMiloTag(iActivityId, iFlowId, id));
             }
@@ -196,15 +204,23 @@ public class DNFUtil {
     }
 
     public static String replaceParam(String string) {
-        String skey = (String) cookies.get("skey");
+
         try {
+            if (string.contains(Constant.RANDOM)) {
+                string = string.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()));
+            }
             string = string.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()))
-                    .replace(Constant.AREA_ID, String.valueOf(character.getAreaId()))
-                    .replace(Constant.CHARACTER_NO, character.getCharacterNo() == null ? "" : character.getCharacterNo())
-                    .replace(Constant.CHARACTER_NAME, character.getCharacterName() == null ? "" : character.getCharacterName())
-                    .replace(Constant.GTK, QQUtil.getGTK(skey))
+                    .replace(Constant.AREA, user.getArea())
+                    .replace(Constant.USER_AREA_NAME, UrlUtil.doubleEncode(user.getArea()))
+                    .replace(Constant.AREA_ID, String.valueOf(user.getAreaId()))
+                    .replace(Constant.CHARACTER_NO, user.getCharacterNo() == null ? "" : user.getCharacterNo())
+                    .replace(Constant.CHARACTER_NAME, user.getCharacterName() == null ? "" : user.getCharacterName())
+                    .replace(Constant.USER_ROLE_ID, user.getCharacterName() == null ? "" : UrlUtil.doubleEncode(user.getCharacterName()))
+                    .replace(Constant.GTK, user.getGTk())
                     .replace(Constant.UUID, UUID.randomUUID().toString())
-                    .replace(Constant.SKEY, skey);
+                    .replace(Constant.CHECK_PARAM, UrlUtil.encode(user.getCheckParam()))
+                    .replace(Constant.MD5_STR, user.getMd5Str())
+                    .replace(Constant.SKEY, user.getSkey());
         } catch (Exception e) {
             logger.error("msg", e);
         }
@@ -213,6 +229,7 @@ public class DNFUtil {
 
     /**
      * 递归遍历jsonObject
+     *
      * @param jsonObject
      * @param list
      * @return void
@@ -220,7 +237,7 @@ public class DNFUtil {
      * @date 2020/4/7
      */
     private static void jsonObjIt(JSONObject jsonObject, List list) {
-        for(JSONObject.Entry<String, Object> entry : jsonObject.entrySet()) {
+        for (JSONObject.Entry<String, Object> entry : jsonObject.entrySet()) {
             String value = entry.getValue().toString();
             if (value.startsWith("[{")) {
                 jsonArrayIt(JSON.parseArray(value), list);
@@ -237,6 +254,7 @@ public class DNFUtil {
 
     /**
      * 递归遍历jsonArray
+     *
      * @param jsonArray
      * @param list
      * @return void
@@ -244,7 +262,7 @@ public class DNFUtil {
      * @date 2020/4/7
      */
     private static void jsonArrayIt(JSONArray jsonArray, List list) {
-        for (int i=0;i<jsonArray.size();i++) {
+        for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             jsonObjIt(jsonObject, list);
         }
@@ -252,14 +270,19 @@ public class DNFUtil {
 
     /**
      * 设置角色信息
-     * @param cht
+     *
+     * @param character
      * @return void
      * @author XanderYe
      * @date 2020/4/14
      */
-    public static void setCharacter(Character cht) {
-        character.setCharacterNo(cht.getCharacterNo());
-        character.setCharacterName(cht.getCharacterName());
-        character.setCharacterOrder(cht.getCharacterOrder());
+    public static void setUser(Character character) {
+        user.setCharacterNo(character.getCharacterNo());
+        user.setCharacterName(character.getCharacterName());
+        user.setCharacterOrder(character.getCharacterOrder());
+        user.setSkey((String) cookies.get("skey"));
+        user.setGTk((QQUtil.getGTK(user.getSkey())));
+        user.setUin((String) cookies.get("uin"));
+        user.setOpenId((String) cookies.get("openid"));
     }
 }

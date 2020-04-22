@@ -10,7 +10,7 @@ public class Constant {
     /**
      * 当前版本
      */
-    public final static String VERSION = "2.2";
+    public final static String VERSION = "2.3";
     /**
      * 数据源
      */
@@ -33,10 +33,15 @@ public class Constant {
 
     public final static String S_MILO_TAG = "${sMiloTag}";
     public final static String RANDOM = "${random}";
+    public final static String AREA = "${area}";
+    public final static String USER_AREA_NAME = "${userAreaName}";
     public final static String AREA_ID = "${areaId}";
     public final static String CHARACTER_NO = "${characterNo}";
     public final static String CHARACTER_NAME = "${characterName}";
+    public final static String USER_ROLE_ID = "${userRoleId}";
     public final static String GTK = "${gTk}";
     public final static String UUID = "${uuid}";
     public final static String SKEY = "${skey}";
+    public final static String CHECK_PARAM = "${checkParam}";
+    public final static String MD5_STR = "${md5Str}";
 }

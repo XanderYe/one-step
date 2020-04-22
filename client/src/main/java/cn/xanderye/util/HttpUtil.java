@@ -44,7 +44,7 @@ public class HttpUtil {
     /**
      * 是否使用代理
      */
-    private static boolean useProxy = false;
+    private static boolean useProxy = true;
     /**
      * socket连接超时
      */
