@@ -115,6 +115,34 @@ public class DNFUtil {
      * @author XanderYe
      * @date 2020/4/14
      */
+    public static String xinYueBind() {
+        Payload payload = new Payload();
+        payload.setMethod(1);
+        payload.setInterfaceUrl("http://act.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=dnf&iActivityId=166962&sServiceDepartment=xinyue&sSDID=26ebd6b381f853ff7ecc1def1a43de7a&sMiloTag=${sMiloTag}&isXhrPost=true");
+        payload.setParams("sServiceType=dnf&user_area=${areaId}&user_roleId=${characterNo}&user_roleName=${userRoleId}&user_areaName=${userAreaName}&user_roleLevel=100&user_checkparam=${checkParam}&user_md5str=${md5Str}&user_sex=&user_platId=&user_partition=11&iActivityId=166962&iFlowId=512491&g_tk=${gTk}&e_code=0&g_code=0&eas_url=http%3A%2F%2Fxinyue.qq.com%2Fact%2Fa20181101rights%2F&eas_refer=http%3A%2F%2Fxinyue.qq.com%2Fact%2Fa20181101rights%2F%3Freqid%3D${uuid}%26version%3D22&xhr=1&sServiceDepartment=xinyue&xhrPostKey=xhr_${random}");
+        try {
+            String result = get(payload);
+            String[] tmp = result.split(" ");
+            if (tmp.length == 3) {
+                return tmp[2] + " " + tmp[1];
+            } else {
+                return result;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "角色绑定失败";
+    }
+
+
+    /**
+     * 获取心悦勇士币和成就点
+     *
+     * @param
+     * @return java.lang.String
+     * @author XanderYe
+     * @date 2020/4/14
+     */
     public static String getXinYuePoints() {
         Payload payload = new Payload();
         payload.setInterfaceUrl("http://act.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=tgclub&iActivityId=166962&sServiceDepartment=xinyue&sSDID=26ebd6b381f853ff7ecc1def1a43de7a&sMiloTag=${sMiloTag}&isXhrPost=true");

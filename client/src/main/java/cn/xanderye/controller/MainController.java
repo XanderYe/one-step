@@ -191,7 +191,7 @@ public class MainController implements Initializable {
                     }
                 } catch (Exception e) {
                     logger.error("msg", e);
-                    logArea.appendText("无法获取到角色信息，可能是cookie错误或者是cookie失效");
+                    logArea.appendText("无法获取到角色信息，可能是cookie错误或者是cookie失效\n");
                 }
             }
             ObservableList<String> roleOptions2 = FXCollections.observableArrayList(characterNameList.toArray(new String[0]));
@@ -320,77 +320,83 @@ public class MainController implements Initializable {
      */
     public void exchange() {
         String characterName = (String) characterBox.getValue();
-        DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
-        String data = DNFUtil.getXinYuePoints();
-        Stage stage = new Stage();
-        stage.setTitle(data);
-        HBox root = new HBox();
-        root.setPadding(new Insets(20, 0, 20, 20));
-        Map<String, String> flowMap = new HashMap<>(16);
-        flowMap.put("成就点装备提升礼盒", "512469");
-        flowMap.put("成就点引导石", "512474");
-        flowMap.put("勇士币装备提升礼盒", "513251");
-        flowMap.put("勇士币引导石", "616809");
-        ComboBox flowBox = new ComboBox();
-        ObservableList<String> flowIds = FXCollections.observableArrayList(flowMap.keySet().toArray(new String[0]));
-        flowBox.setItems(flowIds);
-        flowBox.getSelectionModel().selectFirst();
-        root.getChildren().add(flowBox);
-        Label label2 = new Label();
-        label2.setText("次数：");
-        label2.setPrefWidth(60);
-        label2.setPrefHeight(20);
-        label2.setAlignment(Pos.CENTER_RIGHT);
-        TextField times = new TextField();
-        times.setPrefWidth(80);
-        times.setPrefHeight(20);
-        root.getChildren().add(label2);
-        root.getChildren().add(times);
-        Button exchange = new Button();
-        exchange.setText("兑换");
-        HBox.setMargin(exchange, new Insets(0, 0, 0, 20));
-        root.getChildren().add(exchange);
-        exchange.setOnAction(event -> {
-            exchange.setDisable(true);
-            String flowString = (String) flowBox.getValue();
-            String flowId = flowMap.get(flowString);
-            Payload payload = new Payload();
-            payload.setMethod(1);
-            payload.setInterfaceUrl("http://act.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=tgclub&iActivityId=166962&sServiceDepartment=xinyue&sSDID=26ebd6b381f853ff7ecc1def1a43de7a&sMiloTag=${sMiloTag}&isXhrPost=true");
-            payload.setParams("gameId=&sArea=&iSex=&sRoleId=&iGender=&sServiceType=tgclub&objCustomMsg=&areaname=&roleid=&rolelevel=&rolename=&areaid=&iActivityId=166962&iFlowId=" + flowId + "&g_tk=${gTk}&e_code=0&g_code=0&eas_url=http%3A%2F%2Fxinyue.qq.com%2Fact%2Fa20181101rights%2F&eas_refer=http%3A%2F%2Fnoreferrer%2F%3Freqid%3D${uuid}%26version%3D22&xhr=1&sServiceDepartment=xinyue&xhrPostKey=xhr_${random}");
-            if ("512469".equals(flowId)) {
-                payload.setParams(payload.getParams() + "&package_id=702218");
-            }
-            String timesString = times.getText();
-            int t;
-            try {
-                t = Integer.parseInt(timesString);
-            } catch (Exception e) {
-                t = 1;
-            }
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            int finalT = t;
-            executorService.execute(() -> {
-                try {
-                    for (int i = 0; i < finalT; i++) {
-                        if (i > 0) {
-                            Thread.sleep(5000);
-                        }
-                        String result = DNFUtil.get(payload);
-                        logArea.appendText("兑换" + flowString + "：" + result + "\n");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if ("请选择角色".equals(characterName)) {
+            logArea.appendText("请选择角色\n");
+        } else {
+            DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
+            String data = DNFUtil.getXinYuePoints();
+            Stage stage = new Stage();
+            stage.setTitle(data);
+            HBox root = new HBox();
+            root.setPadding(new Insets(20, 0, 20, 20));
+            Map<String, String> flowMap = new HashMap<>(16);
+            flowMap.put("成就点装备提升礼盒", "512469");
+            flowMap.put("成就点引导石", "512474");
+            flowMap.put("勇士币装备提升礼盒", "513251");
+            flowMap.put("勇士币引导石", "616809");
+            ComboBox flowBox = new ComboBox();
+            ObservableList<String> flowIds = FXCollections.observableArrayList(flowMap.keySet().toArray(new String[0]));
+            flowBox.setItems(flowIds);
+            flowBox.getSelectionModel().selectFirst();
+            root.getChildren().add(flowBox);
+            Label label2 = new Label();
+            label2.setText("次数：");
+            label2.setPrefWidth(60);
+            label2.setPrefHeight(20);
+            label2.setAlignment(Pos.CENTER_RIGHT);
+            TextField times = new TextField();
+            times.setPrefWidth(80);
+            times.setPrefHeight(20);
+            root.getChildren().add(label2);
+            root.getChildren().add(times);
+            Button exchange = new Button();
+            exchange.setText("兑换");
+            HBox.setMargin(exchange, new Insets(0, 0, 0, 20));
+            root.getChildren().add(exchange);
+            exchange.setOnAction(event -> {
+                exchange.setDisable(true);
+                String flowString = (String) flowBox.getValue();
+                String flowId = flowMap.get(flowString);
+                String bind = DNFUtil.xinYueBind();
+                logArea.appendText("角色绑定：" + bind + "\n");
+                Payload payload = new Payload();
+                payload.setMethod(1);
+                payload.setInterfaceUrl("http://act.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=tgclub&iActivityId=166962&sServiceDepartment=xinyue&sSDID=26ebd6b381f853ff7ecc1def1a43de7a&sMiloTag=${sMiloTag}&isXhrPost=true");
+                payload.setParams("gameId=&sArea=&iSex=&sRoleId=&iGender=&sServiceType=tgclub&objCustomMsg=&areaname=&roleid=&rolelevel=&rolename=&areaid=&iActivityId=166962&iFlowId=" + flowId + "&g_tk=${gTk}&e_code=0&g_code=0&eas_url=http%3A%2F%2Fxinyue.qq.com%2Fact%2Fa20181101rights%2F&eas_refer=http%3A%2F%2Fnoreferrer%2F%3Freqid%3D${uuid}%26version%3D22&xhr=1&sServiceDepartment=xinyue&xhrPostKey=xhr_${random}");
+                if ("512469".equals(flowId)) {
+                    payload.setParams(payload.getParams() + "&package_id=702218");
                 }
-                logArea.appendText("执行完毕\n");
-                exchange.setDisable(false);
+                String timesString = times.getText();
+                int t;
+                try {
+                    t = Integer.parseInt(timesString);
+                } catch (Exception e) {
+                    t = 1;
+                }
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                int finalT = t;
+                executorService.execute(() -> {
+                    try {
+                        for (int i = 0; i < finalT; i++) {
+                            if (i > 0) {
+                                Thread.sleep(5000);
+                            }
+                            String result = DNFUtil.get(payload);
+                            logArea.appendText("兑换" + flowString + "：" + result + "\n");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    logArea.appendText("执行完毕\n");
+                    exchange.setDisable(false);
+                });
+                executorService.shutdown();
             });
-            executorService.shutdown();
-        });
-        Scene scene = new Scene(root, 450, 60);
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+            Scene scene = new Scene(root, 450, 60);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
+        }
     }
 
     private void alert(String msg) {
