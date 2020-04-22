@@ -377,15 +377,15 @@ public class MainController implements Initializable {
                             Thread.sleep(5000);
                         }
                         String result = DNFUtil.get(payload);
-                        Platform.runLater(() -> logArea.appendText("兑换" + flowString + "：" + result + "\n"));
+                        logArea.appendText("兑换" + flowString + "：" + result + "\n");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                } finally {
-                    logArea.appendText("执行完毕\n");
-                    exchange.setDisable(false);
                 }
+                logArea.appendText("执行完毕\n");
+                exchange.setDisable(false);
             });
+            executorService.shutdown();
         });
         Scene scene = new Scene(root, 450, 60);
         stage.setScene(scene);
