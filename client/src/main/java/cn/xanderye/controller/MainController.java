@@ -94,30 +94,33 @@ public class MainController implements Initializable {
                     int threadNumber = Math.min(activityList.size(), 10);
                     ExecutorService startService = Executors.newFixedThreadPool(threadNumber);
                     for (Activity activity : activityList) {
-                        List<Payload> payloadList = activity.getPayloadList();
-                        if (payloadList != null && payloadList.size() > 0) {
-                            startService.execute(() -> {
-                                for (Payload payload : payloadList) {
-                                    if (payload.getTimes() == null) {
-                                        payload.setTimes(1);
-                                    }
-                                    // 执行次数
-                                    for (int i = 0; i < payload.getTimes(); i++) {
-                                        try {
-                                            String result = DNFUtil.get(payload);
-                                            logArea.appendText(payload.getNote() + "：" + result + "\n");
-                                            Integer timeout = payload.getTimeout();
-                                            if (timeout == null) {
-                                                timeout = 1;
+                        // 只领取标记自动领取的活动
+                        if (activity.getAuto() != null && activity.getAuto()) {
+                            List<Payload> payloadList = activity.getPayloadList();
+                            if (payloadList != null && payloadList.size() > 0) {
+                                startService.execute(() -> {
+                                    for (Payload payload : payloadList) {
+                                        if (payload.getTimes() == null) {
+                                            payload.setTimes(1);
+                                        }
+                                        // 执行次数
+                                        for (int i = 0; i < payload.getTimes(); i++) {
+                                            try {
+                                                String result = DNFUtil.get(payload);
+                                                logArea.appendText(payload.getNote() + "：" + result + "\n");
+                                                Integer timeout = payload.getTimeout();
+                                                if (timeout == null) {
+                                                    timeout = 1;
+                                                }
+                                                Thread.sleep(timeout * 1000);
+                                            } catch (Exception e) {
+                                                logArea.appendText("接口访问失败\n");
+                                                logger.error("msg", e);
                                             }
-                                            Thread.sleep(timeout * 1000);
-                                        } catch (Exception e) {
-                                            logArea.appendText("接口访问失败\n");
-                                            logger.error("msg", e);
                                         }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                     startService.shutdown();
