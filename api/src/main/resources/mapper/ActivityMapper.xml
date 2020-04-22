@@ -8,6 +8,7 @@
         <result column="url" property="url"/>
         <result column="expired" property="expired"/>
         <result column="auto" property="auto"/>
+        <result column="expiration_time" property="expirationTime"/>
     </resultMap>
 
     <resultMap id="PayloadResultMap" type="cn.xanderye.entity.Activity">
@@ -16,6 +17,7 @@
         <result column="url" property="url"/>
         <result column="expired" property="expired"/>
         <result column="auto" property="auto"/>
+        <result column="expiration_time" property="expirationTime"/>
         <collection property="payloadList" ofType="cn.xanderye.entity.Payload">
             <id column="payload_id" property="id"/>
             <result column="activity_id" property="activityId"/>
@@ -53,7 +55,20 @@
     </select>
 
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO activity (name, url, expired, auto) VALUES (#{name}, #{url}, #{expired}, #{auto})
+        INSERT INTO activity
+        (
+        name, url, expired, auto
+        <if test="expirationTime != null">
+            , expiration_time
+        </if>
+        )
+        VALUES
+        (
+        #{name}, #{url}, #{expired}, #{auto}
+        <if test="expirationTime != null">
+            , #{expirationTime}
+        </if>
+        )
     </insert>
 
     <update id="expire">

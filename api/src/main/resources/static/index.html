@@ -26,6 +26,9 @@
             <label><input name="auto" type="radio" :value="0" v-model="activity.auto" />手动 </label>
         </p>
         <p>
+            <span class="label">请选择过期时间：</span>
+            <input type="date" v-model="activity.expirationTime"></p>
+        <p>
             <button @click="addActivity">添加</button>
         </p>
     </div>
@@ -73,6 +76,7 @@
           name: "",
           url: "",
           auto: 1,
+          expirationTime: null
         },
         activityList: [],
         payload: {
@@ -110,7 +114,8 @@
               this.activity = {
                 name: "",
                 url: "",
-                auto: 1
+                auto: 1,
+                expirationTime: null
               }
             } else {
               alert(res.data.msg);
