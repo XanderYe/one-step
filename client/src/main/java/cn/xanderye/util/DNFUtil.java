@@ -159,6 +159,7 @@ public class DNFUtil {
             result = HttpUtil.doPost(url, headers, cookies, params);
         }
         result = UnicodeUtil.unicodeStrToString(result);
+        result = UrlUtil.decode(result);
         List<String> cn = new ArrayList<>();
         try {
             jsonObjIt(JSON.parseObject(result), cn);

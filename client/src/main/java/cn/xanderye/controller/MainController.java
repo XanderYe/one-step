@@ -25,6 +25,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +108,9 @@ public class MainController implements Initializable {
                                         for (int i = 0; i < payload.getTimes(); i++) {
                                             try {
                                                 String result = DNFUtil.get(payload);
-                                                logArea.appendText(payload.getNote() + "：" + result + "\n");
+                                                if (StringUtils.isNoneEmpty(payload.getNote())) {
+                                                    logArea.appendText(payload.getNote() + "：" + result + "\n");
+                                                }
                                                 Integer timeout = payload.getTimeout();
                                                 if (timeout == null) {
                                                     timeout = 1;
