@@ -319,6 +319,8 @@ public class MainController implements Initializable {
      * @date 2020/4/14
      */
     public void exchange() {
+        String characterName = (String) characterBox.getValue();
+        DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
         String data = DNFUtil.getXinYuePoints();
         Stage stage = new Stage();
         stage.setTitle(data);
@@ -350,8 +352,6 @@ public class MainController implements Initializable {
         root.getChildren().add(exchange);
         exchange.setOnAction(event -> {
             exchange.setDisable(true);
-            String characterName = (String) characterBox.getValue();
-            DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
             String flowString = (String) flowBox.getValue();
             String flowId = flowMap.get(flowString);
             Payload payload = new Payload();
