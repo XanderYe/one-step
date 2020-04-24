@@ -2,18 +2,16 @@ package cn.xanderye.util;
 
 import cn.xanderye.constant.Constant;
 import cn.xanderye.entity.Character;
-import cn.xanderye.entity.User;
 import cn.xanderye.entity.Payload;
+import cn.xanderye.entity.User;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
