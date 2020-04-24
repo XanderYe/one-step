@@ -107,7 +107,7 @@ public class LoginController implements Initializable {
                 }
             }
             updateService.shutdown();
-        }, 3, TimeUnit.SECONDS);
+        }, 1, TimeUnit.SECONDS);
     }
 
     public void getCookie() {
