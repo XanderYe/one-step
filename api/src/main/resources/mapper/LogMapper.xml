@@ -4,12 +4,32 @@
     <resultMap id="BaseResultMap" type="cn.xanderye.entity.Log">
         <id column="id" property="id"/>
         <result column="ip" property="ip"/>
+        <result column="qq" property="qq"/>
         <result column="area" property="area"/>
         <result column="character" property="character"/>
+        <result column="version" property="version"/>
         <result column="time" property="time"/>
     </resultMap>
 
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO log (ip, area, `character`, `time`) VALUES (#{ip}, #{area}, #{character}, #{time})
+        INSERT INTO log (
+        ip, area, `character`, `time`
+        <if test="qq != null">
+            , qq
+        </if>
+        <if test="version != null">
+            , version
+        </if>
+        )
+         VALUES
+         (
+         #{ip}, #{area}, #{character}, #{time}
+        <if test="qq != null">
+            , #{qq}
+        </if>
+        <if test="version != null">
+            , #{version}
+        </if>
+         )
     </insert>
 </mapper>

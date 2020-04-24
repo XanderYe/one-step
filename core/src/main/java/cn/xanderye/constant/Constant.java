@@ -10,7 +10,7 @@ public class Constant {
     /**
      * 当前版本
      */
-    public final static String VERSION = "2.3";
+    public final static String VERSION = "2.4";
     /**
      * 数据源
      */
@@ -44,4 +44,6 @@ public class Constant {
     public final static String SKEY = "${skey}";
     public final static String CHECK_PARAM = "${checkParam}";
     public final static String MD5_STR = "${md5Str}";
+    public final static String UIN = "${uin}";
+    public final static String QQ = "${qq}";
 }

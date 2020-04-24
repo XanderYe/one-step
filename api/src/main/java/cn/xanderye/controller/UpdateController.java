@@ -89,7 +89,10 @@ public class UpdateController {
             StringBuilder sb = new StringBuilder(s);
             replace(sb, "sMiloTag=", Constant.S_MILO_TAG);
             replace(sb, "sArea=", Constant.AREA_ID);
+            replace(sb, "partition=", Constant.AREA_ID);
+            replace(sb, "area=", Constant.AREA_ID);
             replace(sb, "sRoleId=", Constant.CHARACTER_NO);
+            replace(sb, "roleid=", Constant.CHARACTER_NO);
             replace(sb, "sRoleName=", Constant.CHARACTER_NAME);
             replace(sb, "g_tk=", Constant.GTK);
             replace(sb, "_=", Constant.RANDOM);
@@ -98,6 +101,7 @@ public class UpdateController {
             replace(sb, "reqid%3d", Constant.UUID, "%26");
             replace(sb, "reqid%3D", Constant.UUID, "%26");
             replace(sb, "skey=", Constant.SKEY);
+            replace(sb, "uin=", Constant.QQ);
             s = sb.toString();
         }
         return s;

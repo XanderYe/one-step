@@ -11,6 +11,8 @@ public class User {
 
     private String uin;
 
+    private String qq;
+
     private String openId;
 
     private String checkParam;

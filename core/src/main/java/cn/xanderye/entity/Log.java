@@ -16,9 +16,13 @@ public class Log {
 
     private String ip;
 
+    private String qq;
+
     private String area;
 
     private String character;
+
+    private String version;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date time;

@@ -7,6 +7,7 @@ import cn.xanderye.entity.Payload;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -208,7 +209,9 @@ public class DNFUtil {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("area", user.getArea());
+            params.put("qq", user.getQq());
             params.put("character", user.getCharacterName());
+            params.put("version", Constant.VERSION);
             HttpUtil.doPost(Constant.LOG_URL, params);
         } catch (Exception ignored) {
         }
@@ -225,7 +228,8 @@ public class DNFUtil {
                 }
                 url = url.replace(Constant.S_MILO_TAG, QQUtil.sMiloTag(iActivityId, iFlowId, id));
             }
-            url = url.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()));
+            url = url.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()))
+                    .replace(Constant.GTK, user.getGTk());
         } catch (Exception e) {
             logger.error("msg", e);
         }
@@ -249,6 +253,7 @@ public class DNFUtil {
                     .replace(Constant.UUID, UUID.randomUUID().toString())
                     .replace(Constant.CHECK_PARAM, UrlUtil.encode(user.getCheckParam()))
                     .replace(Constant.MD5_STR, user.getMd5Str())
+                    .replace(Constant.QQ, user.getQq())
                     .replace(Constant.SKEY, user.getSkey());
         } catch (Exception e) {
             logger.error("msg", e);
@@ -313,5 +318,6 @@ public class DNFUtil {
         user.setGTk((QQUtil.getGTK(user.getSkey())));
         user.setUin((String) cookies.get("uin"));
         user.setOpenId((String) cookies.get("openid"));
+        user.setQq((String) cookies.get("ptui_loginuin"));
     }
 }
