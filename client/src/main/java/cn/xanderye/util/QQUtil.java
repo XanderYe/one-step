@@ -45,6 +45,11 @@ public class QQUtil {
         return arrMiloTag.toString();
     }
 
+    public static String uinToQQ(String uin) {
+        int startIndex = uin.length() == 11 ? 2 : 1;
+        return uin.substring(startIndex);
+    }
+
     public static void main(String[] args) {
         System.out.println(hash33("MJzx5HJAt9"));
     }
