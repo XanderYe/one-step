@@ -81,7 +81,7 @@ public class UpdateController {
      * 替换字符
      * @param s
      * @return java.lang.String
-     * @author yezhendong
+     * @author XanderYe
      * @date 2020/4/7
      */
     private String replaceString(String s) {

@@ -310,6 +310,20 @@ public class MainController implements Initializable {
         }
     }
 
+    public void license() {
+        try {
+            Stage stage = new Stage();
+            Parent root = FXMLLoader.load(getClass().getResource("/license.fxml"));
+            stage.setTitle("授权验证");
+            Scene scene = new Scene(root, 400, 300);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 心悦批量兑换工具
      *

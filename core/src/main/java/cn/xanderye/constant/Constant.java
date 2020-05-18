@@ -17,6 +17,11 @@ public class Constant {
     public final static String ACTIVITY_URL = "https://www.xanderye.cn/onestep/info/getActivated";
 
     /**
+     * 系统时间
+     */
+    public final static String SYSTEM_TIME_URL = "https://www.xanderye.cn/onestep/info/time";
+
+    /**
      * 检查更新源
      */
     public final static String CHECK_URL = "https://www.xanderye.cn/onestep/info/version";
@@ -24,7 +29,7 @@ public class Constant {
     /**
      * 更新地址
      */
-    public final static String UPDATE_URL = "https://www.xanderye.cn/onestep/update/onestep.jar";
+    public final static String UPDATE_URL = "https://www.xanderye.cn/onestep/update/onestep.zip";
 
     /**
      * 日志

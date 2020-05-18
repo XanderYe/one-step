@@ -3,42 +3,51 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="rootLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.xanderye.controller.MainController">
-   <children>
-      <ComboBox fx:id="areaBox" layoutX="23.0" layoutY="55.0" prefHeight="25.0" prefWidth="120.0" />
-      <ComboBox fx:id="optBox" layoutX="160.0" layoutY="55.0" prefHeight="25.0" prefWidth="120.0" />
-      <ComboBox fx:id="characterBox" layoutX="298.0" layoutY="56.0" prefHeight="25.0" prefWidth="120.0" />
-      <Button fx:id="startButton" layoutX="755.0" layoutY="50.0" mnemonicParsing="false" onAction="#start" prefHeight="37.0" prefWidth="110.0" text="一键领取" />
-      <TextArea fx:id="logArea" editable="false" layoutX="312.0" layoutY="134.0" prefHeight="323.0" prefWidth="552.0" />
-      <ListView fx:id="autoListView" layoutX="25.0" layoutY="134.0" prefHeight="209.0" prefWidth="270.0" />
-      <Label alignment="CENTER_RIGHT" layoutX="418.0" layoutY="461.0" prefHeight="37.0" prefWidth="446.0" text="\@XanderYe 捐赠请邮寄 如灬花似月丶 浙江一区 100级剑帝" />
-      <MenuBar prefWidth="920.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="文件">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#close" text="关闭" />
-            </items>
-          </Menu>
-            <Menu mnemonicParsing="false" text="工具">
-                <items>
-                    <MenuItem mnemonicParsing="false" onAction="#exchange" text="心悦批量兑换" />
-                </items>
-            </Menu>
-          <Menu mnemonicParsing="false" text="帮助">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#home" text="主页" />
-            </items>
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#about" text="关于" />
-            </items>
-              <items>
-                  <MenuItem mnemonicParsing="false" onAction="#update" text="检查更新" />
-              </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <Label layoutX="23.0" layoutY="92.0" prefHeight="37.0" prefWidth="842.0" text="只支持网页每日活动(不支持微信/助手活动和一次性活动)；部分活动若领取失败，请点击活动列表的活动，手动绑定大区，再重试领取" wrapText="true" />
-      <ListView fx:id="manualListView" layoutX="25.0" layoutY="369.0" prefHeight="85.0" prefWidth="270.0" />
-      <Label layoutX="25.0" layoutY="344.0" prefHeight="25.0" prefWidth="270.0" text="需要手动领取的活动" />
-   </children>
+<AnchorPane fx:id="rootLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="500.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.2-internal"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.xanderye.controller.MainController">
+    <children>
+        <ComboBox fx:id="areaBox" layoutX="23.0" layoutY="55.0" prefHeight="25.0" prefWidth="120.0"/>
+        <ComboBox fx:id="optBox" layoutX="160.0" layoutY="55.0" prefHeight="25.0" prefWidth="120.0"/>
+        <ComboBox fx:id="characterBox" layoutX="298.0" layoutY="56.0" prefHeight="25.0" prefWidth="120.0"/>
+        <Button fx:id="startButton" layoutX="755.0" layoutY="50.0" mnemonicParsing="false" onAction="#start"
+                prefHeight="37.0" prefWidth="110.0" text="一键领取"/>
+        <TextArea fx:id="logArea" editable="false" layoutX="312.0" layoutY="134.0" prefHeight="323.0"
+                  prefWidth="552.0"/>
+        <ListView fx:id="autoListView" layoutX="25.0" layoutY="134.0" prefHeight="209.0" prefWidth="270.0"/>
+        <Label alignment="CENTER_RIGHT" layoutX="418.0" layoutY="461.0" prefHeight="37.0" prefWidth="446.0"
+               text="\@XanderYe 捐赠请邮寄 如灬花似月丶 浙江一区 100级剑帝"/>
+        <MenuBar prefWidth="920.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="文件">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#close" text="关闭"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="工具">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#exchange" text="心悦批量兑换"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="帮助">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#home" text="主页"/>
+                    </items>
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#about" text="关于"/>
+                    </items>
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#license" text="授权"/>
+                    </items>
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#update" text="检查更新"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <Label layoutX="23.0" layoutY="92.0" prefHeight="37.0" prefWidth="842.0"
+               text="只支持网页每日活动(不支持微信/助手活动和一次性活动)；部分活动若领取失败，请点击活动列表的活动，手动绑定大区，再重试领取" wrapText="true"/>
+        <ListView fx:id="manualListView" layoutX="25.0" layoutY="369.0" prefHeight="85.0" prefWidth="270.0"/>
+        <Label layoutX="25.0" layoutY="344.0" prefHeight="25.0" prefWidth="270.0" text="需要手动领取的活动"/>
+    </children>
 </AnchorPane>

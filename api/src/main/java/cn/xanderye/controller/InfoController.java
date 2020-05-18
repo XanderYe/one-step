@@ -55,4 +55,9 @@ public class InfoController {
         logMapper.insert(log);
         return new ResultBean();
     }
+
+    @GetMapping("time")
+    public ResultBean time() {
+        return new ResultBean(System.currentTimeMillis());
+    }
 }

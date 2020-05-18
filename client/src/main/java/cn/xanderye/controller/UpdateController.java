@@ -3,6 +3,7 @@ package cn.xanderye.controller;
 import cn.xanderye.constant.Constant;
 import cn.xanderye.entity.Version;
 import cn.xanderye.util.HttpUtil;
+import cn.xanderye.util.ZipUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -49,7 +50,7 @@ public class UpdateController implements Initializable {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
             byte[] bytes = HttpUtil.doDownloadProgress(Constant.UPDATE_URL, null, null, null, progressBar);
-            File file = new File("update/temp.jar");
+            File file = new File("update/temp.zip");
             file.getParentFile().mkdirs();
             FileOutputStream fos = null;
             BufferedOutputStream bos = null;
@@ -72,7 +73,8 @@ public class UpdateController implements Initializable {
                 }
             }
             try {
-                Runtime.getRuntime().exec("cmd /c start .\\jre\\update.vbs");
+                ZipUtil.unzip("update/temp.zip", System.getProperty("user.dir"));
+                Runtime.getRuntime().exec(".\\jre\\bin\\java -jar .\\jre\\main.jar");
                 System.exit(-1);
             } catch (IOException e) {
                 e.printStackTrace();
