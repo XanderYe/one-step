@@ -1,22 +1,20 @@
 package cn.xanderye.controller;
 
+import cn.xanderye.constant.Constant;
+import cn.xanderye.license.License;
 import cn.xanderye.util.HardwareUtil;
 import cn.xanderye.util.PropertyUtil;
-import cn.xanderye.util.RSAEncrypt;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.security.interfaces.RSAPublicKey;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -25,47 +23,48 @@ import java.util.ResourceBundle;
  *
  * @author XanderYe
  */
+@Slf4j
 public class LicenseController implements Initializable {
     @FXML
-    private Label serialLabel;
+    private TextField serialText;
     @FXML
     private Label expireDateLabel;
     @FXML
     private TextArea licenseTextArea;
 
-    public static String licenseCode = "";
+    public static Stage stage;
 
-    public static JSONObject licenseJson = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         String serial = HardwareUtil.getCpuId();
-        serialLabel.setText(serial);
-        licenseCode = PropertyUtil.get("license");
-        if (licenseCode != null) {
-            licenseTextArea.setText(licenseCode);
+        serialText.setText(serial);
+        License.licenseCode = PropertyUtil.get("license");
+        if (License.licenseCode != null) {
+            licenseTextArea.setText(License.licenseCode);
+        }
+        String expireTxt = "未授权";
+        if (License.licenseJson != null) {
             try {
-                InputStream inputStream = this.getClass().getResourceAsStream("/publicKey.keystore");
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                String privateKey = bufferedReader.readLine();
-                RSAPublicKey rsaPublicKey = RSAEncrypt.loadPublicKeyByStr(privateKey);
-                byte[] res = RSAEncrypt.decrypt(rsaPublicKey, Base64.getDecoder().decode(licenseCode));
-                licenseJson = JSON.parseObject(new String(res));
-            } catch (Exception ignored) {
+                String serialCode = License.licenseJson.getString("serial");
+                if (serial.equals(serialCode) || Constant.GOD_LICENSE.equals(serialCode)) {
+                    Date date = new Date(License.licenseJson.getLong("expireDate"));
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    expireTxt = sdf.format(date);
+                }
+            } catch (Exception e) {
+                log.error("msg", e);
             }
-        }
-        if (licenseJson != null) {
-            Date date = new Date(licenseJson.getString("expireDate"));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            expireDateLabel.setText(sdf.format(date));
-        } else {
-            expireDateLabel.setText("未授权");
-        }
 
+        }
+        expireDateLabel.setText(expireTxt);
     }
 
     public void submit() {
         String txt = licenseTextArea.getText();
         PropertyUtil.save("license", txt);
+        License.licenseCode = txt;
+        License.install();
+        stage.hide();
     }
 }

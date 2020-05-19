@@ -7,9 +7,9 @@
     <children>
         <Label layoutX="30.0" layoutY="28.0" prefHeight="30.0" prefWidth="79.0" text="　机器码：" />
         <Label layoutX="30.0" layoutY="68.0" prefHeight="30.0" prefWidth="79.0" text="过期时间：" />
-        <TextArea fx:id="licenseTextArea" layoutX="30.0" layoutY="113.0" prefHeight="130.0" prefWidth="340.0" />
+        <TextArea fx:id="licenseTextArea" layoutX="30.0" layoutY="113.0" prefHeight="130.0" prefWidth="340.0" wrapText="true" />
         <Button layoutX="293.0" layoutY="256.0" mnemonicParsing="false" onAction="#submit" prefHeight="30.0" prefWidth="79.0" text="提交" />
-      <Label fx:id="serialLabel" layoutX="110.0" layoutY="28.0" prefHeight="30.0" prefWidth="261.0" text="　机器码：" />
-      <Label fx:id="expireDateLabel" layoutX="109.0" layoutY="68.0" prefHeight="30.0" prefWidth="261.0" text="　机器码：" />
+      <TextField fx:id="serialText" editable="false" layoutX="110.0" layoutY="28.0" prefHeight="30.0" prefWidth="261.0" />
+      <Label fx:id="expireDateLabel" layoutX="109.0" layoutY="68.0" prefHeight="30.0" prefWidth="261.0" />
     </children>
 </AnchorPane>

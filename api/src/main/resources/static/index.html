@@ -60,7 +60,7 @@
         <h2>更新版本</h2>
         <p><span class="label">请输入版本号：</span><input type="text" v-model="version.version"></p>
         <p><span class="label">请输入更新内容：</span><input type="text" v-model="version.desc" style="width: 400px"></p>
-        <p><input type="file" ref="jar" accept=".jar" @change="changeFile($event)"></p>
+        <p><input type="file" ref="file" accept=".jar,.zip" @change="changeFile($event)"></p>
         <p>
             <button @click="updateVersion">更新</button>
         </p>
@@ -94,7 +94,7 @@
           version: "",
           desc: "",
         },
-        jar: null
+        file: null
       }
     },
     methods: {
@@ -165,14 +165,14 @@
         }
       },
       changeFile(e) {
-        this.jar = e.target.files[0];
+        this.file = e.target.files[0];
       },
       updateVersion() {
-        if (this.version.version && this.version.desc && this.jar) {
+        if (this.version.version && this.version.desc && this.file) {
           let form = new FormData();
           form.append("version", this.version.version);
           form.append("desc", this.version.desc);
-          form.append("jar", this.jar);
+          form.append("file", this.file);
           this.instance.post("save/version", form).then(res => {
             if (res.data.code === 0) {
               alert("更新成功");
@@ -180,7 +180,7 @@
                 version: "",
                 desc: "",
               };
-              this.$refs.jar.value = "";
+              this.$refs.file.value = "";
             } else {
               alert(res.data.msg);
             }

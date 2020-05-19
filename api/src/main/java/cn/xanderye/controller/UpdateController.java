@@ -64,13 +64,14 @@ public class UpdateController {
     }
 
     @PostMapping("version")
-    public ResultBean insertVersion(Version version, @RequestParam("jar") MultipartFile jar) {
+    public ResultBean insertVersion(Version version, @RequestParam("file") MultipartFile file) {
         version.setDate(new Date());
         versionMapper.insert(version);
-        String fileName = "onestep.jar";
+        String[] fileNameSplit = file.getName().split(".");
+        String fileName = "onestep." + fileNameSplit[fileNameSplit.length - 1];
         String dest = uploadRoot + File.separator + fileName;
         try {
-            jar.transferTo(new File(dest));
+            file.transferTo(new File(dest));
         } catch (IOException e) {
             e.printStackTrace();
         }

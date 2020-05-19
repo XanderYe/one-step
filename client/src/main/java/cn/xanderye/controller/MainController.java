@@ -4,7 +4,9 @@ import cn.xanderye.constant.Constant;
 import cn.xanderye.entity.Activity;
 import cn.xanderye.entity.Payload;
 import cn.xanderye.entity.Version;
+import cn.xanderye.license.License;
 import cn.xanderye.util.DNFUtil;
+import cn.xanderye.util.HardwareUtil;
 import cn.xanderye.util.HttpUtil;
 import cn.xanderye.util.PropertyUtil;
 import com.alibaba.fastjson.JSON;
@@ -77,66 +79,80 @@ public class MainController implements Initializable {
     private List<Activity> activityList = null;
 
     public void start() {
-        String characterName = (String) characterBox.getValue();
-        if ("请选择角色".equals(characterName)) {
-            logArea.appendText("请选择角色\n");
-        } else {
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            executorService.execute(() -> {
-                startButton.setDisable(true);
-                DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
-                logArea.appendText("角色名称：" + DNFUtil.user.getCharacterName() + "\n");
-                PropertyUtil.save("uin", DNFUtil.user.getUin());
-                PropertyUtil.save("area", (String) areaBox.getValue());
-                PropertyUtil.save("opt", (String) optBox.getValue());
-                PropertyUtil.save("characterName", characterName);
-                DNFUtil.log();
-                if (activityList != null && activityList.size() > 0) {
-                    int threadNumber = Math.min(activityList.size(), 10);
-                    ExecutorService startService = Executors.newFixedThreadPool(threadNumber);
-                    for (Activity activity : activityList) {
-                        // 只领取标记自动领取的活动
-                        if (activity.getAuto() != null && activity.getAuto()) {
-                            List<Payload> payloadList = activity.getPayloadList();
-                            if (payloadList != null && payloadList.size() > 0) {
-                                startService.execute(() -> {
-                                    for (Payload payload : payloadList) {
-                                        if (payload.getTimes() == null) {
-                                            payload.setTimes(1);
-                                        }
-                                        // 执行次数
-                                        for (int i = 0; i < payload.getTimes(); i++) {
-                                            try {
-                                                String result = DNFUtil.get(payload);
-                                                if (StringUtils.isNoneEmpty(payload.getNote())) {
-                                                    logArea.appendText(payload.getNote() + "：" + result + "\n");
+        boolean alert = true;
+        if (License.licenseJson != null) {
+            String serial = HardwareUtil.getCpuId();
+            String serialCode = License.licenseJson.getString("serial");
+            Long expireDate = License.licenseJson.getLong("expireDate");
+            if ((serial.equals(serialCode) || Constant.GOD_LICENSE.equals(serialCode)) && License.systemTime < expireDate) {
+                alert = false;
+                String characterName = (String) characterBox.getValue();
+                if ("请选择角色".equals(characterName)) {
+                    logArea.appendText("请选择角色\n");
+                } else {
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+                    executorService.execute(() -> {
+                        startButton.setDisable(true);
+                        DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
+                        logArea.appendText("角色名称：" + DNFUtil.user.getCharacterName() + "\n");
+                        PropertyUtil.save("uin", DNFUtil.user.getUin());
+                        PropertyUtil.save("area", (String) areaBox.getValue());
+                        PropertyUtil.save("opt", (String) optBox.getValue());
+                        PropertyUtil.save("characterName", characterName);
+                        DNFUtil.log();
+                        if (activityList != null && activityList.size() > 0) {
+                            int threadNumber = Math.min(activityList.size(), 10);
+                            ExecutorService startService = Executors.newFixedThreadPool(threadNumber);
+                            for (Activity activity : activityList) {
+                                // 只领取标记自动领取的活动
+                                if (activity.getAuto() != null && activity.getAuto()) {
+                                    List<Payload> payloadList = activity.getPayloadList();
+                                    if (payloadList != null && payloadList.size() > 0) {
+                                        startService.execute(() -> {
+                                            for (Payload payload : payloadList) {
+                                                if (payload.getTimes() == null) {
+                                                    payload.setTimes(1);
                                                 }
-                                                Integer timeout = payload.getTimeout();
-                                                if (timeout == null) {
-                                                    timeout = 1;
+                                                // 执行次数
+                                                for (int i = 0; i < payload.getTimes(); i++) {
+                                                    try {
+                                                        String result = DNFUtil.get(payload);
+                                                        if (StringUtils.isNoneEmpty(payload.getNote())) {
+                                                            logArea.appendText(payload.getNote() + "：" + result + "\n");
+                                                        }
+                                                        Integer timeout = payload.getTimeout();
+                                                        if (timeout == null) {
+                                                            timeout = 1;
+                                                        }
+                                                        Thread.sleep(timeout * 1000);
+                                                    } catch (Exception e) {
+                                                        logArea.appendText("接口访问失败\n");
+                                                        logger.error("msg", e);
+                                                    }
                                                 }
-                                                Thread.sleep(timeout * 1000);
-                                            } catch (Exception e) {
-                                                logArea.appendText("接口访问失败\n");
-                                                logger.error("msg", e);
                                             }
-                                        }
+                                        });
                                     }
-                                });
+                                }
+                            }
+                            startService.shutdown();
+                            try {
+                                startService.awaitTermination(10, TimeUnit.MINUTES);
+                                startButton.setDisable(false);
+                                logArea.appendText("执行完毕\n");
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
                         }
-                    }
-                    startService.shutdown();
-                    try {
-                        startService.awaitTermination(10, TimeUnit.MINUTES);
-                        startButton.setDisable(false);
-                        logArea.appendText("执行完毕\n");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    });
+                    executorService.shutdown();
                 }
-            });
-            executorService.shutdown();
+            }
+        }
+
+        if (alert) {
+            logArea.appendText("未授权！请先授权才能使用\r\n");
+            license();
         }
     }
 
@@ -255,6 +271,12 @@ public class MainController implements Initializable {
             logArea.appendText("获取活动信息错误\n");
             logger.error("msg", e);
         }
+
+        License.getSystemTime();
+        License.licenseCode = PropertyUtil.get("license");
+        if (StringUtils.isNotEmpty(License.licenseCode)) {
+            License.install();
+        }
     }
 
     public void close() {
@@ -312,13 +334,13 @@ public class MainController implements Initializable {
 
     public void license() {
         try {
-            Stage stage = new Stage();
+            LicenseController.stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/license.fxml"));
-            stage.setTitle("授权验证");
+            LicenseController.stage.setTitle("授权验证");
             Scene scene = new Scene(root, 400, 300);
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.show();
+            LicenseController.stage.setScene(scene);
+            LicenseController.stage.setResizable(false);
+            LicenseController.stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

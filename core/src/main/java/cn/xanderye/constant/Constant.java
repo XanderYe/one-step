@@ -10,7 +10,7 @@ public class Constant {
     /**
      * 当前版本
      */
-    public final static String VERSION = "2.4";
+    public final static String VERSION = "2.5";
     /**
      * 数据源
      */
@@ -30,6 +30,11 @@ public class Constant {
      * 更新地址
      */
     public final static String UPDATE_URL = "https://www.xanderye.cn/onestep/update/onestep.zip";
+
+    /**
+     * 万能码
+     */
+    public final static String GOD_LICENSE = "XanderYe";
 
     /**
      * 日志

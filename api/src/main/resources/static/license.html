@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DNF助手授权</title>
+    <script src="js/vue.min.js"></script>
+    <script src="js/axios.min.js"></script>
+    <style>
+        .label {
+            width: 200px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div>
+        <p><span class="label">请输入授权码：</span><input type="password" v-model="auth"></p>
+    </div>
+    <div>
+        <p><span class="label">请输入机器码：</span><input type="text" v-model="license.serial"></p>
+        <p><span class="label">请输入授权天数：</span><input type="text" v-model="license.day"></p>
+        <p>
+            <button @click="generate">生成</button>
+        </p>
+    </div>
+
+    <div>
+        <textarea v-model="lic" style="width: 400px; height: 200px"></textarea>
+    </div>
+</div>
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        auth: "",
+        license: {
+          serial: "",
+          day: null,
+        },
+        lic: "",
+      }
+    },
+    methods: {
+      generate() {
+        this.instance.post("license/generate", this.license).then(res => {
+          if (res.data.code === 0) {
+            this.lic = res.data.data;
+          } else {
+            alert(res.data.msg);
+          }
+        });
+      }
+    },
+    created() {
+      this.instance = axios.create();
+      this.instance.interceptors.request.use(config => {
+        config.headers.auth = this.auth;
+        return config;
+      })
+    }
+  })
+</script>
+</body>
+</html>
