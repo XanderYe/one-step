@@ -297,7 +297,7 @@ public class MainController implements Initializable {
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(20, 30, 30, 30));
         Label label = new Label();
-        label.setText("本程序免费使用\nbug提交：邮箱：315695355@qq.com，如有日志请上传日志");
+        label.setText("bug提交：邮箱：315695355@qq.com，如有日志请上传日志");
         label.setFont(new Font(13));
         label.setWrapText(true);
         root.setCenter(label);
