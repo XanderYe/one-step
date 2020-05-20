@@ -5,13 +5,20 @@ import cn.xanderye.license.License;
 import cn.xanderye.util.HardwareUtil;
 import cn.xanderye.util.PropertyUtil;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.crypto.BadPaddingException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,9 +54,14 @@ public class LicenseController implements Initializable {
             try {
                 String serialCode = License.licenseJson.getString("serial");
                 if (serial.equals(serialCode) || Constant.GOD_LICENSE.equals(serialCode)) {
-                    Date date = new Date(License.licenseJson.getLong("expireDate"));
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    expireTxt = sdf.format(date);
+                    Long expireDate = License.licenseJson.getLong("expireDate");
+                    if (License.systemTime > expireDate) {
+                        expireTxt = "已过期";
+                    } else {
+                        Date date = new Date();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        expireTxt = sdf.format(date);
+                    }
                 }
             } catch (Exception e) {
                 log.error("msg", e);
@@ -61,9 +73,25 @@ public class LicenseController implements Initializable {
 
     public void submit() {
         String txt = licenseTextArea.getText();
-        PropertyUtil.save("license", txt);
-        License.licenseCode = txt;
-        License.install();
-        stage.hide();
+        try {
+            License.install(txt);
+            License.licenseCode = txt;
+            PropertyUtil.save("license", txt);
+            stage.hide();
+        } catch (NullPointerException | BadPaddingException e) {
+            Stage stage = new Stage();
+            BorderPane root = new BorderPane();
+            root.setPadding(new Insets(20, 30, 30, 30));
+            Label label = new Label();
+            label.setText("激活码错误");
+            label.setFont(new Font(13));
+            label.setWrapText(true);
+            root.setCenter(label);
+            stage.setTitle("提示");
+            Scene scene = new Scene(root, 200, 100);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
+        }
     }
 }

@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.crypto.BadPaddingException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -275,7 +276,11 @@ public class MainController implements Initializable {
         License.getSystemTime();
         License.licenseCode = PropertyUtil.get("license");
         if (StringUtils.isNotEmpty(License.licenseCode)) {
-            License.install();
+            try {
+                License.install();
+            } catch (BadPaddingException e) {
+                logArea.appendText("当前未激活\n");
+            }
         }
     }
 
@@ -337,7 +342,7 @@ public class MainController implements Initializable {
             LicenseController.stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/license.fxml"));
             LicenseController.stage.setTitle("授权验证");
-            Scene scene = new Scene(root, 400, 300);
+            Scene scene = new Scene(root, 400, 350);
             LicenseController.stage.setScene(scene);
             LicenseController.stage.setResizable(false);
             LicenseController.stage.show();

@@ -74,7 +74,7 @@ public class LoginController implements Initializable {
         }
 
         // 删除更新临时文件
-        File file = new File("update/");
+        File file = new File(System.getProperty("user.dir") + File.separator + "update/temp.zip");
         if (file.exists()) {
             file.delete();
         }

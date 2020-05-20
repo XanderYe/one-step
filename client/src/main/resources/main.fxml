@@ -16,7 +16,7 @@
                   prefWidth="552.0"/>
         <ListView fx:id="autoListView" layoutX="25.0" layoutY="134.0" prefHeight="209.0" prefWidth="270.0"/>
         <Label alignment="CENTER_RIGHT" layoutX="418.0" layoutY="461.0" prefHeight="37.0" prefWidth="446.0"
-               text="\@XanderYe 捐赠请邮寄 如灬花似月丶 浙江一区 100级剑帝"/>
+               text="\@XanderYe"/>
         <MenuBar prefWidth="920.0">
             <menus>
                 <Menu mnemonicParsing="false" text="文件">

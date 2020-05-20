@@ -50,7 +50,7 @@ public class UpdateController implements Initializable {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
             byte[] bytes = HttpUtil.doDownloadProgress(Constant.UPDATE_URL, null, null, null, progressBar);
-            File file = new File("update/temp.zip");
+            File file = new File(System.getProperty("user.dir") + File.separator + "update/temp.zip");
             file.getParentFile().mkdirs();
             FileOutputStream fos = null;
             BufferedOutputStream bos = null;

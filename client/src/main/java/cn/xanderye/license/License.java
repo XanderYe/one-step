@@ -3,17 +3,22 @@ package cn.xanderye.license;
 import cn.xanderye.constant.Constant;
 import cn.xanderye.util.HardwareUtil;
 import cn.xanderye.util.HttpUtil;
-import cn.xanderye.util.PropertyUtil;
-import cn.xanderye.util.RSAEncrypt;
+import cn.xanderye.util.RSAUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
 /**
@@ -36,16 +41,22 @@ public class License {
         serial = HardwareUtil.getCpuId();
     }
 
-    public static void install() {
+    public static void install() throws BadPaddingException, NullPointerException {
+        License.install(null);
+    }
+
+    public static void install(String license) throws BadPaddingException, NullPointerException {
+        if (license == null) {
+            license = licenseCode;
+        }
         try {
             InputStream inputStream = License.class.getResourceAsStream("/publicKey.keystore");
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String privateKey = bufferedReader.readLine();
-            RSAPublicKey rsaPublicKey = RSAEncrypt.loadPublicKeyByStr(privateKey);
-            byte[] res = RSAEncrypt.decrypt(rsaPublicKey, Base64.getDecoder().decode(licenseCode));
+            RSAPublicKey rsaPublicKey = RSAUtil.loadPublicKeyByStr(privateKey);
+            byte[] res = RSAUtil.decrypt(rsaPublicKey, Base64.getDecoder().decode(license));
             licenseJson = JSON.parseObject(new String(res));
-
-        } catch (Exception e) {
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | InvalidKeySpecException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
     }

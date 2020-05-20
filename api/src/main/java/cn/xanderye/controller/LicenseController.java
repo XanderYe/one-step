@@ -2,7 +2,7 @@ package cn.xanderye.controller;
 
 import cn.xanderye.base.ResultBean;
 import cn.xanderye.exception.BusinessException;
-import cn.xanderye.util.RSAEncrypt;
+import cn.xanderye.util.RSAUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,12 +43,12 @@ public class LicenseController {
         InputStream inputStream = this.getClass().getResourceAsStream("/privateKey.keystore");
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String privateKey = bufferedReader.readLine();
-        RSAPrivateKey rsaPrivateKey = RSAEncrypt.loadPrivateKeyByStr(privateKey);
+        RSAPrivateKey rsaPrivateKey = RSAUtil.loadPrivateKeyByStr(privateKey);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("serial", serial);
         jsonObject.put("expireDate", calendar.getTime().getTime());
         String cipher = jsonObject.toJSONString();
-        byte[] cipherData = RSAEncrypt.encrypt(rsaPrivateKey, cipher.getBytes());
+        byte[] cipherData = RSAUtil.encrypt(rsaPrivateKey, cipher.getBytes());
         return new ResultBean<>(Base64.getEncoder().encodeToString(cipherData));
     }
 }
