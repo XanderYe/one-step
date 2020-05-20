@@ -250,6 +250,7 @@ public class DNFUtil {
                     .replace(Constant.GTK, user.getGTk())
                     .replace(Constant.UUID, UUID.randomUUID().toString())
                     .replace(Constant.CHECK_PARAM, UrlUtil.encode(user.getCheckParam()))
+                    .replace(Constant.CHECK_PARAM, UrlUtil.encode(user.getCheckParam()))
                     .replace(Constant.MD5_STR, user.getMd5Str())
                     .replace(Constant.QQ, user.getQq())
                     .replace(Constant.SKEY, user.getSkey());

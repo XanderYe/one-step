@@ -103,6 +103,9 @@ public class UpdateController {
             replace(sb, "reqid%3D", Constant.UUID, "%26");
             replace(sb, "skey=", Constant.SKEY);
             replace(sb, "uin=", Constant.QQ);
+            replace(sb, "md5str=", Constant.MD5_STR);
+            replace(sb, "ams_checkparam=", Constant.AMS_CHECK_PARAM);
+            replace(sb, "checkparam=", Constant.CHECK_PARAM);
             s = sb.toString();
         }
         return s;

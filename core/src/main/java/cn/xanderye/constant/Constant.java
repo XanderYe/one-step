@@ -53,6 +53,7 @@ public class Constant {
     public final static String UUID = "${uuid}";
     public final static String SKEY = "${skey}";
     public final static String CHECK_PARAM = "${checkParam}";
+    public final static String AMS_CHECK_PARAM = "${amsCheckparam}";
     public final static String MD5_STR = "${md5Str}";
     public final static String UIN = "${uin}";
     public final static String QQ = "${qq}";
