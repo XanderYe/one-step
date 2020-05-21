@@ -4,6 +4,7 @@ import cn.xanderye.entity.Activity;
 import cn.xanderye.mapper.ActivityMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * @author 叶振东
  */
 @Slf4j
+@Configuration
 public class ExpirationCheckSchedule {
     @Autowired
     private ActivityMapper activityMapper;
