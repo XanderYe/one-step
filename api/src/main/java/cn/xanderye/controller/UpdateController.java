@@ -71,7 +71,7 @@ public class UpdateController {
     public ResultBean insertVersion(Version version, @RequestParam("file") MultipartFile file) {
         version.setDate(new Date());
         versionMapper.insert(version);
-        String[] fileNameSplit = file.getName().split("[.]");
+        String[] fileNameSplit = file.getOriginalFilename().split("[.]");
         String fileName = "onestep." + fileNameSplit[fileNameSplit.length - 1];
         String dest = uploadRoot + File.separator + fileName;
         try {
