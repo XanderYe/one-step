@@ -41,11 +41,11 @@ public class License {
         serial = HardwareUtil.getCpuId();
     }
 
-    public static void install() throws BadPaddingException, NullPointerException {
+    public static void install() throws BadPaddingException, NullPointerException, IllegalArgumentException {
         License.install(null);
     }
 
-    public static void install(String license) throws BadPaddingException, NullPointerException {
+    public static void install(String license) throws BadPaddingException, NullPointerException, IllegalArgumentException {
         if (license == null) {
             license = licenseCode;
         }

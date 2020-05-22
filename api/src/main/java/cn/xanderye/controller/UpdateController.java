@@ -3,9 +3,11 @@ package cn.xanderye.controller;
 import cn.xanderye.base.ResultBean;
 import cn.xanderye.constant.Constant;
 import cn.xanderye.entity.Activity;
+import cn.xanderye.entity.Announcement;
 import cn.xanderye.entity.Payload;
 import cn.xanderye.entity.Version;
 import cn.xanderye.mapper.ActivityMapper;
+import cn.xanderye.mapper.AnnouncementMapper;
 import cn.xanderye.mapper.PayloadMapper;
 import cn.xanderye.mapper.VersionMapper;
 import com.alibaba.fastjson.JSONObject;
@@ -29,6 +31,8 @@ public class UpdateController {
     private PayloadMapper payloadMapper;
     @Autowired
     private VersionMapper versionMapper;
+    @Autowired
+    private AnnouncementMapper announcementMapper;
 
     @Value("${update.root}")
     private String uploadRoot;
@@ -75,6 +79,13 @@ public class UpdateController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return new ResultBean();
+    }
+
+    @PostMapping("announcement")
+    public ResultBean announcement(@RequestBody Announcement announcement) {
+        announcement.setTime(new Date());
+        announcementMapper.insert(announcement);
         return new ResultBean();
     }
 

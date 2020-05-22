@@ -34,7 +34,7 @@ public class LicenseController implements Initializable {
     @FXML
     private TextField serialText;
     @FXML
-    private Label expireDateLabel;
+    private Label expireDateLabel, psLabel;
     @FXML
     private TextArea licenseTextArea;
 
@@ -43,6 +43,7 @@ public class LicenseController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        psLabel.setText("价格：(2元/120万)/月，购买方式：\n1. 请支付宝转账<315695355@qq.com>并发送订单号到此邮箱\n2. 跨五邮寄100级剑帝<如灬花似月丶>并带上邮箱");
         String serial = HardwareUtil.getCpuId();
         serialText.setText(serial);
         License.licenseCode = PropertyUtil.get("license");
@@ -78,12 +79,12 @@ public class LicenseController implements Initializable {
             License.licenseCode = txt;
             PropertyUtil.save("license", txt);
             stage.hide();
-        } catch (NullPointerException | BadPaddingException e) {
+        } catch (Exception e) {
             Stage stage = new Stage();
             BorderPane root = new BorderPane();
             root.setPadding(new Insets(20, 30, 30, 30));
             Label label = new Label();
-            label.setText("激活码错误");
+            label.setText("授权码错误");
             label.setFont(new Font(13));
             label.setWrapText(true);
             root.setCenter(label);

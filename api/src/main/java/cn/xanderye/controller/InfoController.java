@@ -2,9 +2,11 @@ package cn.xanderye.controller;
 
 import cn.xanderye.base.ResultBean;
 import cn.xanderye.entity.Activity;
+import cn.xanderye.entity.Announcement;
 import cn.xanderye.entity.Log;
 import cn.xanderye.entity.Version;
 import cn.xanderye.mapper.ActivityMapper;
+import cn.xanderye.mapper.AnnouncementMapper;
 import cn.xanderye.mapper.LogMapper;
 import cn.xanderye.mapper.VersionMapper;
 import cn.xanderye.util.RequestUtil;
@@ -27,6 +29,8 @@ public class InfoController {
     private VersionMapper versionMapper;
     @Autowired
     private LogMapper logMapper;
+    @Autowired
+    private AnnouncementMapper announcementMapper;
 
     @GetMapping("getActivities")
     public ResultBean getActivities() {
@@ -59,5 +63,11 @@ public class InfoController {
     @GetMapping("time")
     public ResultBean time() {
         return new ResultBean(System.currentTimeMillis());
+    }
+
+    @GetMapping("announcement")
+    public ResultBean announcement() {
+        Announcement announcement = announcementMapper.getLatest();
+        return new ResultBean<>(announcement.getContent());
     }
 }

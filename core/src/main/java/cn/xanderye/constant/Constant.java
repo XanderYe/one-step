@@ -1,5 +1,7 @@
 package cn.xanderye.constant;
 
+import java.math.BigDecimal;
+
 /**
  * Created on 2020/4/2.
  *
@@ -10,7 +12,7 @@ public class Constant {
     /**
      * 当前版本
      */
-    public final static String VERSION = "2.5";
+    public final static BigDecimal VERSION = new BigDecimal("2.5");
     /**
      * 数据源
      */
@@ -30,6 +32,11 @@ public class Constant {
      * 更新地址
      */
     public final static String UPDATE_URL = "https://www.xanderye.cn/onestep/update/onestep.zip";
+
+    /**
+     * 公告地址
+     */
+    public final static String ANNOUNCEMENT_URL = "https://www.xanderye.cn/onestep/info/announcement";
 
     /**
      * 万能码

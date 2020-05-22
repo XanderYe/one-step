@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xanderye.mapper.AnnouncementMapper">
+    <resultMap id="BaseResultMap" type="cn.xanderye.entity.Announcement">
+        <id column="id" property="id"/>
+        <result column="content" property="content"/>
+        <result column="time" property="time"/>
+    </resultMap>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO announcement (content, `time`) VALUES (#{content}, #{time})
+    </insert>
+
+    <select id="getLatest" resultMap="BaseResultMap">
+        SELECT * FROM announcement ORDER BY id DESC LIMIT 1
+    </select>
+</mapper>

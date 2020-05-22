@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,7 +86,8 @@ public class LoginController implements Initializable {
             String result = HttpUtil.doGet(Constant.CHECK_URL, null);
             UpdateController.version = JSON.parseObject(result, Version.class);
             if (UpdateController.version != null) {
-                if (!Constant.VERSION.equals(UpdateController.version.getVersion())) {
+                BigDecimal newVersion = new BigDecimal(UpdateController.version.getVersion());
+                if (Constant.VERSION.compareTo(newVersion) < 0) {
                     Platform.runLater(() -> {
                         try {
                             Stage stage = new Stage();
