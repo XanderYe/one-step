@@ -43,7 +43,7 @@ public class LicenseController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        psLabel.setText("价格：(2元/120万)/月，购买方式：\n1. 请支付宝转账<315695355@qq.com>并发送订单号到此邮箱\n2. 跨五邮寄100级剑帝<如灬花似月丶>并带上邮箱");
+        psLabel.setText("价格：(2元/120万)/月，购买方式：\n1. 请支付宝转账<315695355@qq.com>并发送订单号和机器码到此邮箱\n2. 跨五邮寄100级剑帝<如灬花似月丶>并带上机器码和邮箱");
         String serial = HardwareUtil.getCpuId();
         serialText.setText(serial);
         License.licenseCode = PropertyUtil.get("license");
