@@ -68,6 +68,7 @@ public class InfoController {
     @GetMapping("announcement")
     public ResultBean announcement() {
         Announcement announcement = announcementMapper.getLatest();
-        return new ResultBean<>(announcement.getContent());
+        String content = announcement != null ? announcement.getContent() : "";
+        return new ResultBean<>(content);
     }
 }
