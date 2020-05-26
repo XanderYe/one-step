@@ -87,7 +87,7 @@
         },
         activityList: [],
         payload: {
-          activityId: "",
+          activityId: null,
           interfaceUrl: "",
           method: 0,
           headers: "",
@@ -138,11 +138,9 @@
           this.instance.post("save/payload", this.payload).then(res => {
             if (res.data.code === 0) {
               alert("添加成功");
-              this.payload = {
-                activityId: "",
-                interfaceUrl: "",
-                params: "",
-              }
+              this.payload.activityId = null;
+              this.payload.interfaceUrl = "";
+              this.payload.params = "";
             } else {
               alert(res.data.msg);
             }

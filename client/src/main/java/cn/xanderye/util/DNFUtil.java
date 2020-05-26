@@ -234,7 +234,7 @@ public class DNFUtil {
         return url;
     }
 
-    public static String replaceParam(String string) {
+    private static String replaceParam(String string) {
 
         try {
             if (string.contains(Constant.RANDOM)) {
@@ -269,7 +269,7 @@ public class DNFUtil {
      * @author XanderYe
      * @date 2020/4/7
      */
-    private static void jsonObjIt(JSONObject jsonObject, List list) {
+    public static void jsonObjIt(JSONObject jsonObject, List list) {
         for (JSONObject.Entry<String, Object> entry : jsonObject.entrySet()) {
             String value = entry.getValue().toString();
             if (value.startsWith("[{")) {
