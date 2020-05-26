@@ -25,7 +25,7 @@ public class ExpirationCheckSchedule {
         log.info("开始清理过期活动");
         List<Activity> activityList = activityMapper.getActivities();
         for (Activity activity:activityList) {
-            if (activity.getExpirationTime() != null && activity.getExpirationTime().getTime() > System.currentTimeMillis()) {
+            if (activity.getExpirationTime() != null && activity.getExpirationTime().getTime() < System.currentTimeMillis()) {
                 log.info("清理" + activity.getName());
                 activityMapper.expire(activity.getId());
             }
