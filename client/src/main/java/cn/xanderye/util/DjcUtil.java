@@ -2,6 +2,7 @@ package cn.xanderye.util;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
@@ -57,12 +58,13 @@ public class DjcUtil {
     public static PublicKey getRSAPublicKey() {
         try {
             InputStream inputStream = DjcUtil.class.getResourceAsStream("/djc_rsa_public_key_new.der");
-            byte[] bytes = new byte[4096];
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[4096];
             int length;
-            while ((length = inputStream.read(bytes)) != -1) {
-                inputStream.read(bytes, 0, length);
+            while ((length = inputStream.read(buffer)) != -1) {
+                bos.write(buffer, 0, length);
             }
-            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bos.toByteArray());
             return KeyFactory.getInstance(RSA_ALGORITHM).generatePublic(keySpec);
         } catch (Exception e) {
             return null;
