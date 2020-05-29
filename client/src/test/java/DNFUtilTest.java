@@ -12,8 +12,7 @@ import cn.xanderye.util.QQUtil;
 public class DNFUtilTest {
     public static void main(String[] args) {
         String url = "https://act.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=tgclub&iActivityId=304044&sServiceDepartment=xinyue&sSDID=24d6a3160b98b7093b36a500c08be45e&sMiloTag=${sMiloTag}&_=1590465319090";
-        //String params = "gameId=&sArea=&iSex=&sRoleId=&iGender=&sServiceType=tgclub&objCustomMsg=&areaname=&roleid=&rolelevel=&rolename=&areaid=&iActivityId=304044&iFlowId=664276&g_tk=${gTk}&e_code=0&g_code=0&eas_url=http%3A%2F%2Fxinyue.qq.com%2Fact%2Fa20200428dnfbackflow%2F&eas_refer=http%3A%2F%2Fxinyue.qq.com%2Fcomm-htdocs%2Fmilo_mobile%2Flogin.html%3Freqid%3D7ca1f7ef-2470-474e-a8f5-f741ef84df59%26version%3D23&sServiceDepartment=xinyue";
-        String params = "gameId=&sArea=&iSex=&sRoleId=&iGender=&sServiceType=tgclub&objCustomMsg=&areaname=&roleid=&rolelevel=&rolename=&areaid=&iActivityId=304044&iFlowId=664159&g_tk=${gTk}&e_code=0&g_code=0&eas_url=http%3A%2F%2Fxinyue.qq.com%2Fact%2Fa20200428dnfbackflow%2F&eas_refer=http%3A%2F%2Fxinyue.qq.com%2Fcomm-htdocs%2Fmilo_mobile%2Flogin.html%3Freqid%3D7ca1f7ef-2470-474e-a8f5-f741ef84df59%26version%3D23&sServiceDepartment=xinyue";
+        String params = "gameId=&sArea=&iSex=&sRoleId=&iGender=&sServiceType=tgclub&objCustomMsg=&areaname=&roleid=&rolelevel=&rolename=&areaid=&iActivityId=304044&iFlowId=664276&g_tk=${gTk}&e_code=0&g_code=0&eas_url=http%3A%2F%2Fxinyue.qq.com%2Fact%2Fa20200428dnfbackflow%2F&eas_refer=http%3A%2F%2Fxinyue.qq.com%2Fcomm-htdocs%2Fmilo_mobile%2Flogin.html%3Freqid%3D7ca1f7ef-2470-474e-a8f5-f741ef84df59%26version%3D23&sServiceDepartment=xinyue";
         Payload payload = new Payload();
         payload.setMethod(1);
         payload.setInterfaceUrl(replaceString(url));

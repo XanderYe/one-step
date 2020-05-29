@@ -30,4 +30,8 @@ public class User {
     private String characterName;
 
     private Integer characterOrder;
+
+    private String deviceId;
+
+    private String deviceModel;
 }

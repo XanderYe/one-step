@@ -226,8 +226,18 @@ public class DNFUtil {
                 }
                 url = url.replace(Constant.S_MILO_TAG, QQUtil.sMiloTag(iActivityId, iFlowId, id));
             }
-            url = url.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()))
-                    .replace(Constant.GTK, user.getGTk());
+            if (url.contains(Constant.RANDOM)) {
+                url = url.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()));
+            }
+            if (url.contains(Constant.GTK)) {
+                url = url.replace(Constant.GTK, user.getGTk());;
+            }
+            if (url.contains(Constant.DEVICE_ID)) {
+                url = url.replace(Constant.DEVICE_ID, DNFUtil.user.getDeviceId());
+            }
+            if (url.contains(Constant.DEVICE_MODEL)) {
+                url = url.replace(Constant.DEVICE_MODEL, DNFUtil.user.getDeviceModel());
+            }
         } catch (Exception e) {
             logger.error("msg", e);
         }
@@ -235,25 +245,56 @@ public class DNFUtil {
     }
 
     private static String replaceParam(String string) {
-
         try {
             if (string.contains(Constant.RANDOM)) {
                 string = string.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()));
             }
-            string = string.replace(Constant.RANDOM, String.valueOf(System.currentTimeMillis()))
-                    .replace(Constant.AREA, user.getArea())
-                    .replace(Constant.USER_AREA_NAME, UrlUtil.doubleEncode(user.getArea()))
-                    .replace(Constant.AREA_ID, String.valueOf(user.getAreaId()))
-                    .replace(Constant.CHARACTER_NO, user.getCharacterNo() == null ? "" : user.getCharacterNo())
-                    .replace(Constant.CHARACTER_NAME, user.getCharacterName() == null ? "" : user.getCharacterName())
-                    .replace(Constant.USER_ROLE_ID, user.getCharacterName() == null ? "" : UrlUtil.doubleEncode(user.getCharacterName()))
-                    .replace(Constant.GTK, user.getGTk())
-                    .replace(Constant.UUID, UUID.randomUUID().toString())
-                    .replace(Constant.CHECK_PARAM, UrlUtil.encode(user.getCheckParam()))
-                    .replace(Constant.CHECK_PARAM, UrlUtil.encode(user.getCheckParam()))
-                    .replace(Constant.MD5_STR, user.getMd5Str())
-                    .replace(Constant.QQ, user.getQq())
-                    .replace(Constant.SKEY, user.getSkey());
+            if (string.contains(Constant.AREA)) {
+                string = string.replace(Constant.AREA, user.getArea());
+            }
+            if (string.contains(Constant.USER_AREA_NAME)) {
+                string = string.replace(Constant.USER_AREA_NAME, UrlUtil.doubleEncode(user.getArea()));
+            }
+            if (string.contains(Constant.AREA_ID)) {
+                string = string.replace(Constant.AREA_ID, String.valueOf(user.getAreaId()));
+            }
+            if (string.contains(Constant.CHARACTER_NO)) {
+                string = string.replace(Constant.CHARACTER_NO, user.getCharacterNo() == null ? "" : user.getCharacterNo());
+            }
+            if (string.contains(Constant.CHARACTER_NAME)) {
+                string = string.replace(Constant.CHARACTER_NAME, user.getCharacterName() == null ? "" : user.getCharacterName());
+            }
+            if (string.contains(Constant.USER_ROLE_ID)) {
+                string = string.replace(Constant.USER_ROLE_ID, user.getCharacterName() == null ? "" : UrlUtil.doubleEncode(user.getCharacterName()));
+            }
+            if (string.contains(Constant.GTK)) {
+                string = string.replace(Constant.GTK, user.getGTk());
+            }
+            if (string.contains(Constant.UUID)) {
+                string = string.replace(Constant.UUID, UUID.randomUUID().toString());
+            }
+            if (string.contains(Constant.CHECK_PARAM)) {
+                string = string.replace(Constant.CHECK_PARAM, UrlUtil.encode(user.getCheckParam()));
+            }
+            if (string.contains(Constant.MD5_STR)) {
+                string = string.replace(Constant.MD5_STR, user.getMd5Str());
+            }
+            if (string.contains(Constant.QQ)) {
+                string = string.replace(Constant.QQ, user.getQq());
+            }
+            if (string.contains(Constant.SKEY)) {
+                string = string.replace(Constant.SKEY, user.getSkey());
+            }
+            if (string.contains(Constant.DJC_SIGN)) {
+                String sign = DjcUtil.djcSign(DNFUtil.user.getUin(), DNFUtil.user.getDeviceId());
+                string = string.replace(Constant.DJC_SIGN, sign);
+            }
+            if (string.contains(Constant.DEVICE_ID)) {
+                string = string.replace(Constant.DEVICE_ID, DNFUtil.user.getDeviceId());
+            }
+            if (string.contains(Constant.DEVICE_MODEL)) {
+                string = string.replace(Constant.DEVICE_MODEL, DNFUtil.user.getDeviceModel());
+            }
         } catch (Exception e) {
             logger.error("msg", e);
         }
@@ -271,7 +312,7 @@ public class DNFUtil {
      */
     public static void jsonObjIt(JSONObject jsonObject, List list) {
         for (JSONObject.Entry<String, Object> entry : jsonObject.entrySet()) {
-            String value = entry.getValue().toString();
+            String value = entry != null && entry.getValue() != null ? entry.getValue().toString() : "";
             if (value.startsWith("[{")) {
                 jsonArrayIt(JSON.parseArray(value), list);
             } else if (value.startsWith("{")) {

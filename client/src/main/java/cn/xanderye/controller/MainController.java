@@ -27,14 +27,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.crypto.BadPaddingException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -156,6 +159,7 @@ public class MainController implements Initializable {
         }
     }
 
+    @SneakyThrows
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // 初始化配置
@@ -164,7 +168,16 @@ public class MainController implements Initializable {
         String area = PropertyUtil.get("area");
         String opt = PropertyUtil.get("opt");
         String cname = PropertyUtil.get("characterName");
-
+        String deviceModel = PropertyUtil.get("deviceModel");
+        String deviceId = PropertyUtil.get("deviceId");
+        if (StringUtils.isEmpty(deviceModel)) {
+            deviceModel = HardwareUtil.generateDeviceModel();
+            deviceId = HardwareUtil.generateDeviceId();
+            PropertyUtil.save("deviceModel", deviceModel);
+            PropertyUtil.save("deviceId", deviceId);
+        }
+        DNFUtil.user.setDeviceModel(URLEncoder.encode(deviceModel, "UTF-8"));
+        DNFUtil.user.setDeviceId(deviceId);
         List<String> areaList = new ArrayList<>();
         for (int i = 0; i < DNFUtil.areaArray.size(); i++) {
             JSONObject jsonObject = DNFUtil.areaArray.getJSONObject(i);
@@ -428,7 +441,7 @@ public class MainController implements Initializable {
                                 Thread.sleep(5000);
                             }
                             String result = DNFUtil.get(payload);
-                            logArea.appendText("兑换" + flowString + "：" + result + "\n");
+                            logArea.appendText("兑换" + flowString + "(" + (i+1) + "/" + finalT + ")：" + result + "\n");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -459,6 +472,124 @@ public class MainController implements Initializable {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+    }
+
+    public void djc() {
+        String characterName = (String) characterBox.getValue();
+        if ("请选择角色".equals(characterName)) {
+            logArea.appendText("请选择角色\n");
+        } else {
+            DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
+            Stage stage = new Stage();
+            stage.setTitle("道聚城");
+            HBox root = new HBox();
+            root.setPadding(new Insets(20, 0, 20, 20));
+            Label label = new Label();
+            label.setText("暂不支持连续签到奖励领取和许愿");
+            label.setPrefWidth(180);
+            label.setPrefHeight(20);
+            label.setAlignment(Pos.CENTER_RIGHT);
+            root.getChildren().add(label);
+            Button exchange = new Button();
+            exchange.setText("每日任务");
+            HBox.setMargin(exchange, new Insets(0, 0, 0, 40));
+            root.getChildren().add(exchange);
+            exchange.setOnAction(event -> {
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                executorService.execute(() -> {
+                    Map<String, Object> cookieMap = DNFUtil.cookies;
+                    cookieMap.put("djc_appSource", "android");
+                    cookieMap.put("djc_appVersion", "102");
+                    cookieMap.put("acctype", "");
+                    List<Payload> payloadList = new ArrayList<>();
+
+                    // 签到
+                    Payload payload = new Payload();
+                    payload.setInterfaceUrl("https://comm.ams.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=dj&iActivityId=11117&sServiceDepartment=djc&set_info=newterminals&&weexVersion=0.9.4&platform=android&deviceModel=${deviceModel}&&appSource=android&appVersion=102&ch=10000&sDeviceID=${deviceId}&osVersion=Android-22&p_tk=${gTk}&sVersionName=v4.1.2.1");
+                    payload.setParams("appVersion=102&ch=10000&iActivityId=11117&sDjcSign=${djcSign}&sDeviceID=${deviceId}&p_tk=${gTk}&osVersion=Android-22&iFlowId=96939&sVersionName=v4.1.2.1&sServiceDepartment=djc&sServiceType=dj&appSource=android&g_tk=${gTk}");
+                    payload.setMethod(1);
+                    payload.setTimes(1);
+                    payload.setTimeout(1);
+                    payload.setHeaders("User-Agent:TencentDaojucheng=v4.1.2.1&appSource=android&appVersion=102&ch=10000&sDeviceID=${deviceId}&firmwareVersion=5.1.1&phoneBrand=Xiaomi&phoneVersion=MI+5s&displayMetrics=720 * 1280&cpu=ARMv7 processor rev 1 (v7l)&net=wifi&sVersionName=v4.1.2.1;Accept-Encoding:gzip;Referer:https://daoju.qq.com/index.shtml;");
+                    payload.setNote("签到");
+                    payloadList.add(payload);
+
+                    // 浏览绝不错亿
+                    payload = new Payload();
+                    payload.setInterfaceUrl("https://djcapp.game.qq.com/daoju/igw/main/");
+                    payload.setParams("_service=app.task.report&&weexVersion=0.9.4&platform=android&deviceModel=${deviceModel}&task_type=activity_center&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android&sDjcSign=${djcSign}");
+                    payload.setMethod(0);
+                    payload.setNote("浏览绝不错亿");
+                    payloadList.add(payload);
+
+                    // 绝不错亿
+                    payload = new Payload();
+                    payload.setInterfaceUrl("https://apps.game.qq.com/daoju/v3/api/we/usertaskv2/Usertask.php");
+                    payload.setParams("iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json&optype=receive_usertask&appid=1001&iruleId=100040&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android");
+                    payload.setMethod(0);
+                    payload.setNote("绝不错亿");
+                    payloadList.add(payload);
+
+                    // 兑换pl药
+                    payload = new Payload();
+                    payload.setInterfaceUrl("https://apps.game.qq.com/cgi-bin/daoju/v3/hs/i_buy.cgi");
+                    payload.setParams("weexVersion=0.9.4&platform=android&deviceModel=${deviceModel}&&&_output_fmt=1&_plug_id=9800&_from=app&iGoodsSeqId=755&iActionId=2594&iActionType=26&_biz_code=dnf&biz=dnf&appid=1003&_app_id=1003&rolename=${characterName}&lRoleId=${characterNo}&iZone=${areaId}&p_tk=${gTk}&_cs=2&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android&sDjcSign=${djcSign}");
+                    payload.setMethod(0);
+                    payload.setNote("兑换pl药");
+                    payloadList.add(payload);
+
+                    // 兑换有礼
+                    payload = new Payload();
+                    payload.setInterfaceUrl("https://apps.game.qq.com/daoju/v3/api/we/usertaskv2/Usertask.php");
+                    payload.setParams("iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json&optype=receive_usertask&appid=1001&iruleId=327091&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android");
+                    payload.setMethod(0);
+                    payload.setNote("兑换有礼");
+                    payloadList.add(payload);
+
+                    // 有理想
+                    payload = new Payload();
+                    payload.setInterfaceUrl("https://apps.game.qq.com/daoju/v3/api/we/usertaskv2/Usertask.php");
+                    payload.setParams("iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json&optype=receive_usertask&appid=1001&iruleId=302124&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android");
+                    payload.setMethod(0);
+                    payload.setNote("有理想");
+                    payloadList.add(payload);
+
+                    // 银宝箱
+                    payload = new Payload();
+                    payload.setInterfaceUrl("https://apps.game.qq.com/daoju/v3/api/we/usertaskv2/Usertask.php");
+                    payload.setParams("iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json&optype=receive_usertask&appid=1001&iruleId=100001&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android");
+                    payload.setMethod(0);
+                    payload.setNote("银宝箱");
+                    payloadList.add(payload);
+
+                    // 金宝箱
+                    payload = new Payload();
+                    payload.setInterfaceUrl("https://apps.game.qq.com/daoju/v3/api/we/usertaskv2/Usertask.php");
+                    payload.setParams("iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json&optype=receive_usertask&appid=1001&iruleId=100002&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android");
+                    payload.setMethod(0);
+                    payload.setNote("金宝箱");
+                    payloadList.add(payload);
+
+                    // 执行次数
+                    for (Payload p : payloadList) {
+                        try {
+                            String result = DNFUtil.get(p);
+                            if (StringUtils.isNoneEmpty(p.getNote())) {
+                                logArea.appendText(p.getNote() + "：" + result + "\n");
+                            }
+                            Thread.sleep(1000);
+                        } catch (Exception e) {
+                            logArea.appendText("接口访问失败\n");
+                        }
+                    }
+                });
+                executorService.shutdown();
+            });
+            Scene scene = new Scene(root, 350, 60);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
+        }
     }
 
     public void getAnnouncement() {

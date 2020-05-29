@@ -12,7 +12,7 @@ public class Constant {
     /**
      * 当前版本
      */
-    public final static BigDecimal VERSION = new BigDecimal("2.5");
+    public final static BigDecimal VERSION = new BigDecimal("2.6");
     /**
      * 数据源
      */
@@ -64,4 +64,7 @@ public class Constant {
     public final static String MD5_STR = "${md5Str}";
     public final static String UIN = "${uin}";
     public final static String QQ = "${qq}";
+    public final static String DEVICE_ID = "${deviceId}";
+    public final static String DEVICE_MODEL = "${deviceModel}";
+    public final static String DJC_SIGN = "${djcSign}";
 }
