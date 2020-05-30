@@ -372,7 +372,6 @@ public class DNFUtil {
         user.setSkey((String) cookies.get("skey"));
         user.setGTk((QQUtil.getGTK(user.getSkey())));
         user.setUin((String) cookies.get("uin"));
-        user.setQq(QQUtil.uinToQQ(user.getUin()));
         user.setOpenId((String) cookies.get("openid"));
         user.setQq(QQUtil.uinToQQ(user.getUin()));
     }
