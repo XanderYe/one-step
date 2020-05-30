@@ -9,6 +9,7 @@
         <result column="character" property="character"/>
         <result column="version" property="version"/>
         <result column="time" property="time"/>
+        <result column="auth_date" property="authDate"/>
     </resultMap>
 
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
@@ -20,6 +21,9 @@
         <if test="version != null">
             , version
         </if>
+        <if test="authDate != null">
+            , auth_date
+        </if>
         )
          VALUES
          (
@@ -29,6 +33,9 @@
         </if>
         <if test="version != null">
             , #{version}
+        </if>
+        <if test="version != null">
+            , #{authDate}
         </if>
          )
     </insert>
