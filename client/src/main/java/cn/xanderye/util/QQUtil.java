@@ -46,11 +46,18 @@ public class QQUtil {
     }
 
     public static String uinToQQ(String uin) {
-        int startIndex = uin.length() == 11 ? 2 : 1;
+        int startIndex = 1;
+        for (int i = 1; i < uin.length(); i++) {
+            if (uin.charAt(i) != '0') {
+                break;
+            }
+            startIndex++;
+        }
         return uin.substring(startIndex);
     }
 
     public static void main(String[] args) {
-        System.out.println(hash33("MJzx5HJAt9"));
+        System.out.println(uinToQQ("o1025251531"));
+        System.out.println(uinToQQ("o0315695355"));
     }
 }
