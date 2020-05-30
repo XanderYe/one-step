@@ -59,7 +59,7 @@ public class LicenseController implements Initializable {
                     if (License.systemTime > expireDate) {
                         expireTxt = "已过期";
                     } else {
-                        Date date = new Date();
+                        Date date = new Date(expireDate);
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         expireTxt = sdf.format(date);
                     }

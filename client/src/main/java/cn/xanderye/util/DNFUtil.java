@@ -4,6 +4,7 @@ import cn.xanderye.constant.Constant;
 import cn.xanderye.entity.Character;
 import cn.xanderye.entity.Payload;
 import cn.xanderye.entity.User;
+import cn.xanderye.license.License;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -210,6 +212,19 @@ public class DNFUtil {
             params.put("qq", user.getQq());
             params.put("character", user.getCharacterName());
             params.put("version", Constant.VERSION);
+            String authDate = "未授权";
+            if (License.licenseJson != null) {
+                Long expireDate = License.licenseJson.getLong("expireDate");
+                if (License.systemTime > expireDate) {
+                    authDate = "已过期";
+                } else {
+                    Date date = new Date(expireDate);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    authDate = sdf.format(date);
+                }
+
+            }
+            params.put("authDate", authDate);
             HttpUtil.doPost(Constant.LOG_URL, params);
         } catch (Exception ignored) {
         }
