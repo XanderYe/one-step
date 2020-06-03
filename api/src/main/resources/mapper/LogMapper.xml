@@ -34,7 +34,7 @@
         <if test="version != null">
             , #{version}
         </if>
-        <if test="version != null">
+        <if test="authDate != null">
             , #{authDate}
         </if>
          )
