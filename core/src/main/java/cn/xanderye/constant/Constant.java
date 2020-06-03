@@ -12,7 +12,7 @@ public class Constant {
     /**
      * 当前版本
      */
-    public final static BigDecimal VERSION = new BigDecimal("2.7");
+    public final static BigDecimal VERSION = new BigDecimal("2.8");
     /**
      * 数据源
      */

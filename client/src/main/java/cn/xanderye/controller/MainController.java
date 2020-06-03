@@ -5,10 +5,7 @@ import cn.xanderye.entity.Activity;
 import cn.xanderye.entity.Payload;
 import cn.xanderye.entity.Version;
 import cn.xanderye.license.License;
-import cn.xanderye.util.DNFUtil;
-import cn.xanderye.util.HardwareUtil;
-import cn.xanderye.util.HttpUtil;
-import cn.xanderye.util.PropertyUtil;
+import cn.xanderye.util.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -98,13 +95,17 @@ public class MainController implements Initializable {
         boolean finalIsAuth = isAuth;
         String characterName = (String) characterBox.getValue();
         if ("请选择角色".equals(characterName)) {
-            logArea.appendText("请选择角色\n");
+            Platform.runLater(() -> {
+                logArea.appendText("请选择角色\n");
+            });
         } else {
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.execute(() -> {
                 startButton.setDisable(true);
                 DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
-                logArea.appendText("角色名称：" + DNFUtil.user.getCharacterName() + "\n");
+                Platform.runLater(() -> {
+                    logArea.appendText("角色名称：" + DNFUtil.user.getCharacterName() + "\n");
+                });
                 PropertyUtil.save("uin", DNFUtil.user.getUin());
                 PropertyUtil.save("area", (String) areaBox.getValue());
                 PropertyUtil.save("opt", (String) optBox.getValue());
@@ -128,7 +129,9 @@ public class MainController implements Initializable {
                                             try {
                                                 String result = DNFUtil.get(payload);
                                                 if (StringUtils.isNoneEmpty(payload.getNote())) {
-                                                    logArea.appendText(payload.getNote() + "：" + result + "\n");
+                                                    Platform.runLater(() -> {
+                                                        logArea.appendText(payload.getNote() + "：" + result + "\n");
+                                                    });
                                                 }
                                                 Integer timeout = payload.getTimeout();
                                                 if (timeout == null) {
@@ -136,7 +139,9 @@ public class MainController implements Initializable {
                                                 }
                                                 Thread.sleep(timeout * 1000);
                                             } catch (Exception e) {
-                                                logArea.appendText("接口访问失败\n");
+                                                Platform.runLater(() -> {
+                                                    logArea.appendText("接口访问失败\n");
+                                                });
                                                 logger.error("msg", e);
                                             }
                                         }
@@ -149,7 +154,9 @@ public class MainController implements Initializable {
                     try {
                         startService.awaitTermination(10, TimeUnit.MINUTES);
                         startButton.setDisable(false);
-                        logArea.appendText("执行完毕\n");
+                        Platform.runLater(() -> {
+                            logArea.appendText("执行完毕\n");
+                        });
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -220,7 +227,9 @@ public class MainController implements Initializable {
                     }
                 } catch (Exception e) {
                     logger.error("msg", e);
-                    logArea.appendText("无法获取到角色信息，可能是cookie错误或者是cookie失效\n");
+                    Platform.runLater(() -> {
+                        logArea.appendText("无法获取到角色信息，可能是cookie错误或者是cookie失效\n");
+                    });
                 }
             }
             ObservableList<String> roleOptions2 = FXCollections.observableArrayList(characterNameList.toArray(new String[0]));
@@ -281,7 +290,9 @@ public class MainController implements Initializable {
                 });
             }
         } catch (Exception e) {
-            logArea.appendText("获取活动信息错误\n");
+            Platform.runLater(() -> {
+                logArea.appendText("获取活动信息错误\n");
+            });
             logger.error("msg", e);
         }
 
@@ -292,12 +303,18 @@ public class MainController implements Initializable {
         if (StringUtils.isNotEmpty(License.licenseCode)) {
             try {
                 License.install();
-                logArea.appendText("当前为授权版本, 使用全速执行\n");
+                Platform.runLater(() -> {
+                    logArea.appendText("当前为授权版本, 使用全速执行\n");
+                });
             } catch (Exception e) {
-                logArea.appendText("当前为免费版本，只能使用最低速度执行\n");
+                Platform.runLater(() -> {
+                    logArea.appendText("当前为免费版本，只能使用最低速度执行\n");
+                });
             }
         } else {
-            logArea.appendText("当前为免费版本，只能使用最低速度执行\n");
+            Platform.runLater(() -> {
+                logArea.appendText("当前为免费版本，只能使用最低速度执行\n");
+            });
         }
     }
 
@@ -385,7 +402,9 @@ public class MainController implements Initializable {
             if ((serial.equals(serialCode) || Constant.GOD_LICENSE.equals(serialCode)) && License.systemTime < expireDate) {
                 String characterName = (String) characterBox.getValue();
                 if ("请选择角色".equals(characterName)) {
-                    logArea.appendText("请选择角色\n");
+                    Platform.runLater(() -> {
+                        logArea.appendText("请选择角色\n");
+                    });
                 } else {
                     DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
                     String data = DNFUtil.getXinYuePoints();
@@ -422,7 +441,9 @@ public class MainController implements Initializable {
                         String flowString = (String) flowBox.getValue();
                         String flowId = flowMap.get(flowString);
                         String bind = DNFUtil.xinYueBind();
-                        logArea.appendText("角色绑定：" + bind + "\n");
+                        Platform.runLater(() -> {
+                            logArea.appendText("角色绑定：" + bind + "\n");
+                        });
                         Payload payload = new Payload();
                         payload.setMethod(1);
                         payload.setInterfaceUrl("http://act.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=tgclub&iActivityId=166962&sServiceDepartment=xinyue&sSDID=26ebd6b381f853ff7ecc1def1a43de7a&sMiloTag=${sMiloTag}&isXhrPost=true");
@@ -446,12 +467,17 @@ public class MainController implements Initializable {
                                         Thread.sleep(5000);
                                     }
                                     String result = DNFUtil.get(payload);
-                                    logArea.appendText("兑换" + flowString + "(" + (i+1) + "/" + finalT + ")：" + result + "\n");
+                                    int finalI = i;
+                                    Platform.runLater(() -> {
+                                        logArea.appendText("兑换" + flowString + "(" + (finalI +1) + "/" + finalT + ")：" + result + "\n");
+                                    });
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            logArea.appendText("执行完毕\n");
+                            Platform.runLater(() -> {
+                                logArea.appendText("执行完毕\n");
+                            });
                             exchange.setDisable(false);
                         });
                         executorService.shutdown();
@@ -462,10 +488,14 @@ public class MainController implements Initializable {
                     stage.show();
                 }
             } else {
-                logArea.appendText("未授权，无法使用此功能\n");
+                Platform.runLater(() -> {
+                    logArea.appendText("未授权，无法使用此功能\n");
+                });
             }
         } else {
-            logArea.appendText("未授权，无法使用此功能\n");
+            Platform.runLater(() -> {
+                logArea.appendText("未授权，无法使用此功能\n");
+            });
         }
     }
 
@@ -493,7 +523,9 @@ public class MainController implements Initializable {
             if ((serial.equals(serialCode) || Constant.GOD_LICENSE.equals(serialCode)) && License.systemTime < expireDate) {
                 String characterName = (String) characterBox.getValue();
                 if ("请选择角色".equals(characterName)) {
-                    logArea.appendText("请选择角色\n");
+                    Platform.runLater(() -> {
+                        logArea.appendText("请选择角色\n");
+                    });
                 } else {
                     DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
                     Stage stage = new Stage();
@@ -501,9 +533,10 @@ public class MainController implements Initializable {
                     HBox root = new HBox();
                     root.setPadding(new Insets(20, 0, 20, 20));
                     Label label = new Label();
-                    label.setText("暂不支持连续签到奖励领取和许愿");
-                    label.setPrefWidth(180);
+                    label.setText("许愿条件：请先许愿一个CF中除改名卡以外的道具");
+                    label.setPrefWidth(280);
                     label.setPrefHeight(20);
+                    label.setWrapText(true);
                     label.setAlignment(Pos.CENTER_RIGHT);
                     root.getChildren().add(label);
                     Button exchange = new Button();
@@ -511,6 +544,7 @@ public class MainController implements Initializable {
                     HBox.setMargin(exchange, new Insets(0, 0, 0, 40));
                     root.getChildren().add(exchange);
                     exchange.setOnAction(event -> {
+                        stage.close();
                         ExecutorService executorService = Executors.newSingleThreadExecutor();
                         executorService.execute(() -> {
                             Map<String, Object> cookieMap = DNFUtil.cookies;
@@ -518,15 +552,51 @@ public class MainController implements Initializable {
                             cookieMap.put("djc_appVersion", "102");
                             cookieMap.put("acctype", "");
                             List<Payload> payloadList = new ArrayList<>();
+                            Payload payload;
+
+                            try {
+                                String result = DjcUtil.getDemandList();
+                                JSONObject resultObject = JSON.parseObject(result);
+                                JSONObject data = resultObject.getJSONObject("data");
+                                JSONArray list = data.getJSONArray("list");
+                                if (list.size() > 0) {
+                                    JSONObject jsonObject = list.getJSONObject(0);
+
+                                    String iZoneId = jsonObject.getString("iZoneId");
+                                    String sRoleName = jsonObject.getString("sRoleName");
+                                    String sZoneDesc = URLEncoder.encode(jsonObject.getString("sZoneDesc"), "UTF-8");
+                                    payload = new Payload();
+                                    payload.setInterfaceUrl("https://djcapp.game.qq.com/daoju/igw/main/");
+                                    payload.setParams("_service=app.demand.create&iAppId=1001&_app_id=1001&p_tk=${gTk}&iActionId=3&iGoodsId=3655&sBizCode=cf" +
+                                            "&iZoneId=" + iZoneId +
+                                            "&sZoneDesc= " + sZoneDesc +
+                                            "&sRoleId=${qq}&sRoleName=" + sRoleName +
+                                            "&sGetterDream=%E5%9C%9F%E8%B1%AA%E5%9C%9F%E8%B1%AA%E6%B1%82%E5%8C%85%E5%85%BB%EF%BC%81&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-25&ch=10000&sVersionName=v4.1.2.1&appSource=android&sDjcSign=${djcSign}");
+                                    payload.setMethod(0);
+                                    payload.setNote("许愿改名卡");
+                                    String res = DNFUtil.get(payload);
+                                    Payload finalPayload = payload;
+                                    Platform.runLater(() -> {
+                                        logArea.appendText(finalPayload.getNote() + "：" + res + "\n");
+                                    });
+                                } else {
+                                    Platform.runLater(() -> {
+                                        logArea.appendText("请先许愿一个除了改名卡以外的道具\n");
+                                    });
+                                }
+                            } catch (Exception e) {
+                                Platform.runLater(() -> {
+                                    logArea.appendText("获取许愿列表失败\n");
+                                });
+                            }
 
                             // 签到
-                            Payload payload = new Payload();
+                            payload = new Payload();
                             payload.setInterfaceUrl("https://comm.ams.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=dj&iActivityId=11117&sServiceDepartment=djc&set_info=newterminals&&weexVersion=0.9.4&platform=android&deviceModel=${deviceModel}&&appSource=android&appVersion=102&ch=10000&sDeviceID=${deviceId}&osVersion=Android-22&p_tk=${gTk}&sVersionName=v4.1.2.1");
                             payload.setParams("appVersion=102&ch=10000&iActivityId=11117&sDjcSign=${djcSign}&sDeviceID=${deviceId}&p_tk=${gTk}&osVersion=Android-22&iFlowId=96939&sVersionName=v4.1.2.1&sServiceDepartment=djc&sServiceType=dj&appSource=android&g_tk=${gTk}");
                             payload.setMethod(1);
                             payload.setTimes(1);
                             payload.setTimeout(1);
-                            payload.setHeaders("User-Agent:TencentDaojucheng=v4.1.2.1&appSource=android&appVersion=102&ch=10000&sDeviceID=${deviceId}&firmwareVersion=5.1.1&phoneBrand=Xiaomi&phoneVersion=MI+5s&displayMetrics=720 * 1280&cpu=ARMv7 processor rev 1 (v7l)&net=wifi&sVersionName=v4.1.2.1;Accept-Encoding:gzip;Referer:https://daoju.qq.com/index.shtml;");
                             payload.setNote("签到");
                             payloadList.add(payload);
 
@@ -591,26 +661,68 @@ public class MainController implements Initializable {
                                 try {
                                     String result = DNFUtil.get(p);
                                     if (StringUtils.isNoneEmpty(p.getNote())) {
-                                        logArea.appendText(p.getNote() + "：" + result + "\n");
+                                        Platform.runLater(() -> {
+                                            logArea.appendText(p.getNote() + "：" + result + "\n");
+                                        });
                                     }
                                     Thread.sleep(1000);
                                 } catch (Exception e) {
-                                    logArea.appendText("接口访问失败\n");
+                                    Platform.runLater(() -> {
+                                        logArea.appendText("接口访问失败\n");
+                                    });
                                 }
+                            }
+
+                            try {
+                                String result = DjcUtil.getDemandList();
+                                JSONObject resultObject = JSON.parseObject(result);
+                                JSONObject data = resultObject.getJSONObject("data");
+                                JSONArray list = data.getJSONArray("list");
+                                JSONObject target = null;
+                                for (int i = 0; i < list.size(); i++) {
+                                    JSONObject jsonObject = list.getJSONObject(i);
+                                    String goodId = jsonObject.getString("iGoodsId");
+                                    if ("3655".equals(goodId)) {
+                                        target = jsonObject;
+                                        break;
+                                    }
+                                }
+                                if (target != null) {
+                                    String sKeyId = target.getString("sKeyId");
+                                    payload = new Payload();
+                                    payload.setInterfaceUrl("https://apps.game.qq.com/daoju/djcapp/v5/demand/DemandDelete.php");
+                                    payload.setParams("output_format=jsonp&iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json" +
+                                            "&sKeyId=" + sKeyId + "&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-25&ch=10000&sVersionName=v4.1.2.1&appSource=android");
+                                    payload.setMethod(0);
+                                    payload.setNote("删除许愿");
+                                } else {
+                                    Platform.runLater(() -> {
+                                        logArea.appendText("未找到许愿道具，无法删除");
+                                    });
+                                }
+                            } catch (Exception e) {
+                                logger.error("msg", e);
+                                Platform.runLater(() -> {
+                                    logArea.appendText("获取许愿列表失败\n");
+                                });
                             }
                         });
                         executorService.shutdown();
                     });
-                    Scene scene = new Scene(root, 350, 60);
+                    Scene scene = new Scene(root, 450, 60);
                     stage.setScene(scene);
                     stage.setResizable(false);
                     stage.show();
                 }
             } else {
-                logArea.appendText("未授权，无法使用此功能\n");
+                Platform.runLater(() -> {
+                    logArea.appendText("未授权，无法使用此功能\n");
+                });
             }
         } else {
-            logArea.appendText("未授权，无法使用此功能\n");
+            Platform.runLater(() -> {
+                logArea.appendText("未授权，无法使用此功能\n");
+            });
         }
     }
 

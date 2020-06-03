@@ -230,6 +230,10 @@ public class DNFUtil {
         }
     }
 
+    private static String replaceHeader(String headerString) {
+        return headerString;
+    }
+
     private static String replaceUrl(String url, String paramString) {
         try {
             if (url.contains(Constant.S_MILO_TAG)) {

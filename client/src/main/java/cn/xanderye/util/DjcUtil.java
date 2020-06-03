@@ -1,5 +1,7 @@
 package cn.xanderye.util;
 
+import cn.xanderye.constant.Constant;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
@@ -8,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Map;
 
 /**
  * Created on 2020/5/27.
@@ -19,6 +22,44 @@ public class DjcUtil {
     public static final String AES_KEY = "84e6c6dc0f9p4a56";
     private static String RSA_ALGORITHM = "RSA";
     private static String RSA_ALGORITHM_MODEL = "RSA/ECB/PKCS1Padding";
+
+    /**
+     * 获取许愿列表
+     * @param
+     * @return java.lang.String
+     * @author XanderYe
+     * @date 2020/6/3
+     */
+    public static String getDemandList() {
+        String url = "https://djcapp.game.qq.com/daoju/igw/main/";
+        String paramString = "_service=app.demand.user.demand&&weexVersion=0.9.4&platform=android&deviceModel=${deviceModel}&_app_id=1001&_biz_code=&pn=1&ps=5&appUid=${qq}&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTK}&osVersion=Android-25&ch=10000&sVersionName=v4.1.2.1&appSource=android&sDjcSign=${djcSign}";
+        paramString = replaceParam(paramString);
+        Map<String, Object> paramMap = HttpUtil.formatParameters(paramString);
+        String result = HttpUtil.doGet(url, null, DNFUtil.cookies, paramMap);
+        result = UnicodeUtil.unicodeStrToString(result);
+        result = UrlUtil.decode(result);
+        return result;
+    }
+
+    private static String replaceParam(String string) {
+        if (string.contains(Constant.GTK)) {
+            string = string.replace(Constant.GTK, DNFUtil.user.getGTk());
+        }
+        if (string.contains(Constant.QQ)) {
+            string = string.replace(Constant.QQ, DNFUtil.user.getQq());
+        }
+        if (string.contains(Constant.DJC_SIGN)) {
+            String sign = DjcUtil.djcSign(DNFUtil.user.getUin(), DNFUtil.user.getDeviceId());
+            string = string.replace(Constant.DJC_SIGN, sign);
+        }
+        if (string.contains(Constant.DEVICE_ID)) {
+            string = string.replace(Constant.DEVICE_ID, DNFUtil.user.getDeviceId());
+        }
+        if (string.contains(Constant.DEVICE_MODEL)) {
+            string = string.replace(Constant.DEVICE_MODEL, DNFUtil.user.getDeviceModel());
+        }
+        return string;
+    }
 
     public static String djcSign(String uin, String sDeviceId) {
         String paramString = null;
