@@ -5,6 +5,7 @@ import cn.xanderye.entity.Activity;
 import cn.xanderye.entity.Announcement;
 import cn.xanderye.entity.Log;
 import cn.xanderye.entity.Version;
+import cn.xanderye.exception.BusinessException;
 import cn.xanderye.mapper.ActivityMapper;
 import cn.xanderye.mapper.AnnouncementMapper;
 import cn.xanderye.mapper.LogMapper;
@@ -52,7 +53,7 @@ public class InfoController {
     @PostMapping("log")
     public ResultBean log(Log log, HttpServletRequest request) {
         if (log.getCharacter() == null) {
-            throw new RuntimeException("参数不为空");
+            throw new BusinessException("参数不为空");
         }
         log.setIp(RequestUtil.getIpAddress(request));
         log.setTime(new Date());
