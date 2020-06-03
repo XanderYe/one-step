@@ -695,6 +695,11 @@ public class MainController implements Initializable {
                                             "&sKeyId=" + sKeyId + "&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-25&ch=10000&sVersionName=v4.1.2.1&appSource=android");
                                     payload.setMethod(0);
                                     payload.setNote("删除许愿");
+                                    String res = DNFUtil.get(payload);
+                                    Payload finalPayload = payload;
+                                    Platform.runLater(() -> {
+                                        logArea.appendText(finalPayload.getNote() + "：" + res + "\n");
+                                    });
                                 } else {
                                     Platform.runLater(() -> {
                                         logArea.appendText("未找到许愿道具，无法删除");
