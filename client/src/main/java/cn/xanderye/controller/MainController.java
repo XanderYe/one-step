@@ -533,7 +533,7 @@ public class MainController implements Initializable {
                     HBox root = new HBox();
                     root.setPadding(new Insets(20, 0, 20, 20));
                     Label label = new Label();
-                    label.setText("许愿条件：请先许愿一个CF中除改名卡以外的道具");
+                    label.setText("许愿条件：请先许愿一个CF中除猎狐者以外的道具");
                     label.setPrefWidth(280);
                     label.setPrefHeight(20);
                     label.setWrapText(true);
@@ -573,7 +573,7 @@ public class MainController implements Initializable {
                                             "&sRoleId=${qq}&sRoleName=" + sRoleName +
                                             "&sGetterDream=%E5%9C%9F%E8%B1%AA%E5%9C%9F%E8%B1%AA%E6%B1%82%E5%8C%85%E5%85%BB%EF%BC%81&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-25&ch=10000&sVersionName=v4.1.2.1&appSource=android&sDjcSign=${djcSign}");
                                     payload.setMethod(0);
-                                    payload.setNote("许愿改名卡");
+                                    payload.setNote("许愿猎狐者(永久)");
                                     String res = DNFUtil.get(payload);
                                     Payload finalPayload = payload;
                                     Platform.runLater(() -> {
