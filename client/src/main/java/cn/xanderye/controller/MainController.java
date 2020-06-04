@@ -702,7 +702,7 @@ public class MainController implements Initializable {
                                     });
                                 } else {
                                     Platform.runLater(() -> {
-                                        logArea.appendText("未找到许愿道具，无法删除");
+                                        logArea.appendText("未找到许愿道具，无法删除\n");
                                     });
                                 }
                             } catch (Exception e) {
