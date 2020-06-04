@@ -567,7 +567,7 @@ public class MainController implements Initializable {
                                     String sZoneDesc = URLEncoder.encode(jsonObject.getString("sZoneDesc"), "UTF-8");
                                     payload = new Payload();
                                     payload.setInterfaceUrl("https://djcapp.game.qq.com/daoju/igw/main/");
-                                    payload.setParams("_service=app.demand.create&iAppId=1001&_app_id=1001&p_tk=${gTk}&iActionId=3&iGoodsId=3655&sBizCode=cf" +
+                                    payload.setParams("_service=app.demand.create&iAppId=1001&_app_id=1001&p_tk=${gTk}&iActionId=3&iGoodsId=2395&sBizCode=cf" +
                                             "&iZoneId=" + iZoneId +
                                             "&sZoneDesc= " + sZoneDesc +
                                             "&sRoleId=${qq}&sRoleName=" + sRoleName +
@@ -682,7 +682,7 @@ public class MainController implements Initializable {
                                 for (int i = 0; i < list.size(); i++) {
                                     JSONObject jsonObject = list.getJSONObject(i);
                                     String goodId = jsonObject.getString("iGoodsId");
-                                    if ("3655".equals(goodId)) {
+                                    if ("2395".equals(goodId)) {
                                         target = jsonObject;
                                         break;
                                     }
