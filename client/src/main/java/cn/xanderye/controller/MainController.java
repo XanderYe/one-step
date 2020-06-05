@@ -533,7 +533,7 @@ public class MainController implements Initializable {
                     HBox root = new HBox();
                     root.setPadding(new Insets(20, 0, 20, 20));
                     Label label = new Label();
-                    label.setText("许愿条件：请先许愿一个CF中除猎狐者以外的道具");
+                    label.setText("许愿条件：请先手动许愿一个CF/LOL的道具");
                     label.setPrefWidth(280);
                     label.setPrefHeight(20);
                     label.setWrapText(true);
@@ -565,15 +565,25 @@ public class MainController implements Initializable {
                                     String iZoneId = jsonObject.getString("iZoneId");
                                     String sRoleName = jsonObject.getString("sRoleName");
                                     String sZoneDesc = URLEncoder.encode(jsonObject.getString("sZoneDesc"), "UTF-8");
+                                    String sBizCode = jsonObject.getString("sBizCode");
+                                    String sGoodId = "";
                                     payload = new Payload();
                                     payload.setInterfaceUrl("https://djcapp.game.qq.com/daoju/igw/main/");
-                                    payload.setParams("_service=app.demand.create&iAppId=1001&_app_id=1001&p_tk=${gTk}&iActionId=3&iGoodsId=2395&sBizCode=cf" +
+                                    String paramString = "_service=app.demand.create&iAppId=1001&_app_id=1001&p_tk=${gTk}&iActionId=3&sGetterDream=%E5%9C%9F%E8%B1%AA%E5%9C%9F%E8%B1%AA%E6%B1%82%E5%8C%85%E5%85%BB%EF%BC%81&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-25&ch=10000&sVersionName=v4.1.2.1&appSource=android&sDjcSign=${djcSign}";
+                                    paramString += "&sBizCode=" + sBizCode +
                                             "&iZoneId=" + iZoneId +
-                                            "&sZoneDesc= " + sZoneDesc +
-                                            "&sRoleId=${qq}&sRoleName=" + sRoleName +
-                                            "&sGetterDream=%E5%9C%9F%E8%B1%AA%E5%9C%9F%E8%B1%AA%E6%B1%82%E5%8C%85%E5%85%BB%EF%BC%81&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-25&ch=10000&sVersionName=v4.1.2.1&appSource=android&sDjcSign=${djcSign}");
+                                            "&sRoleName=" + sRoleName;
+                                    if ("cf".equals(sBizCode)) {
+                                        sGoodId = "2395";
+                                        paramString += "&sZoneDesc= " + sZoneDesc;
+                                        payload.setNote("许愿猎狐者");
+                                    } else if ("lol".equals(sBizCode)) {
+                                        sGoodId = "674";
+                                        payload.setNote("许愿德玛西亚之力盖伦");
+                                    }
+                                    paramString +=  "&iGoodsId=" + sGoodId + "&sRoleId=${qq}";
+                                    payload.setParams(paramString);
                                     payload.setMethod(0);
-                                    payload.setNote("许愿猎狐者(永久)");
                                     String res = DNFUtil.get(payload);
                                     Payload finalPayload = payload;
                                     Platform.runLater(() -> {
@@ -581,7 +591,7 @@ public class MainController implements Initializable {
                                     });
                                 } else {
                                     Platform.runLater(() -> {
-                                        logArea.appendText("请先许愿一个除了改名卡以外的道具\n");
+                                        logArea.appendText("请先许愿一个除了猎狐者/德玛西亚之力盖伦以外的道具\n");
                                     });
                                 }
                             } catch (Exception e) {
@@ -682,7 +692,7 @@ public class MainController implements Initializable {
                                 for (int i = 0; i < list.size(); i++) {
                                     JSONObject jsonObject = list.getJSONObject(i);
                                     String goodId = jsonObject.getString("iGoodsId");
-                                    if ("2395".equals(goodId)) {
+                                    if ("2395".equals(goodId) || "674".equals(goodId)) {
                                         target = jsonObject;
                                         break;
                                     }
