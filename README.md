@@ -33,7 +33,7 @@ post
 ```json
 {
 	"serial": "序列号",
-	"day": 天数
+	"day": 999
 }
 ```
 
