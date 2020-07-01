@@ -16,7 +16,7 @@ dnf活动助手，一键领取活动礼包
 
 管理页面：http://ip:port/ 
 
-授权码: application.properties文件中的password项
+授权码: [application.properties](https://github.com/XanderYe/one-step/blob/master/api/src/main/resources/application.properties)文件中的[password](https://github.com/XanderYe/one-step/blob/master/api/src/main/resources/application.properties#L34)项
 
 ### 获取客户端授权码
 
