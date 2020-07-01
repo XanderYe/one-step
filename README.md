@@ -13,7 +13,10 @@ dnf活动助手，一键领取活动礼包
 ## 服务端
 
 使用SpringBoot开发，为了偷懒没有service层
-管理页面：http://ip:port/,授权码在application.properties文件中的password项
+
+管理页面：http://ip:port/ 
+
+授权码: application.properties文件中的password项
 
 ### 获取客户端授权码
 
@@ -23,7 +26,7 @@ http://ip:port/license/generate
 
 #### 请求方式
 
--post
+post
 
 #### 参数示例
 
@@ -35,5 +38,7 @@ http://ip:port/license/generate
 ```
 
 ## 客户端
-使用JavaFX开发，跨平台支持，不授权是单线程执行，授权后是多线程执行
+使用JavaFX开发，跨平台支持，支持自动更新
+
+不授权是单线程执行，授权后是多线程执行
 
