@@ -1,10 +1,14 @@
-# 项目名称
+# 名称
 
 one-step
 
-# 项目说明
+# 描述
 
 dnf活动助手，一键领取活动礼包
+
+# 运行截图
+
+![picture](https://github.com/XanderYe/one-step/blob/master/%E8%BF%90%E8%A1%8C%E6%88%AA%E5%9B%BE.png)
 
 # 说明
 
