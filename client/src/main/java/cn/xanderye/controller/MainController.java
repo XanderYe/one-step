@@ -39,6 +39,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Created on 2020/4/1.
@@ -61,6 +62,15 @@ public class MainController implements Initializable {
     private TextArea logArea;
     @FXML
     private Button startButton;
+
+    public static TextArea log;
+
+    Map<String, String> flowMap = new HashMap<String, String>(16){{
+        put("成就点装备提升礼盒", "512469");
+        put("成就点引导石", "512474");
+        put("勇士币装备提升礼盒", "513251");
+        put("勇士币引导石", "616809");
+    }};
 
     /**
      * 服务器数组 map
@@ -169,6 +179,7 @@ public class MainController implements Initializable {
     @SneakyThrows
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        log = logArea;
         // 初始化配置
         PropertyUtil.init(null);
         String uin = PropertyUtil.get("uin");
@@ -412,11 +423,6 @@ public class MainController implements Initializable {
                     stage.setTitle(data);
                     HBox root = new HBox();
                     root.setPadding(new Insets(20, 0, 20, 20));
-                    Map<String, String> flowMap = new HashMap<>(16);
-                    flowMap.put("成就点装备提升礼盒", "512469");
-                    flowMap.put("成就点引导石", "512474");
-                    flowMap.put("勇士币装备提升礼盒", "513251");
-                    flowMap.put("勇士币引导石", "616809");
                     ComboBox flowBox = new ComboBox();
                     ObservableList<String> flowIds = FXCollections.observableArrayList(flowMap.keySet().toArray(new String[0]));
                     flowBox.setItems(flowIds);
@@ -515,7 +521,7 @@ public class MainController implements Initializable {
         stage.show();
     }
 
-    public void djc() {
+    public void openDjc() {
         if (License.licenseJson != null) {
             String serial = HardwareUtil.getCpuId();
             String serialCode = License.licenseJson.getString("serial");
@@ -528,206 +534,17 @@ public class MainController implements Initializable {
                     });
                 } else {
                     DNFUtil.setUser(DNFUtil.characterMap.get(characterName));
-                    Stage stage = new Stage();
-                    stage.setTitle("道聚城");
-                    HBox root = new HBox();
-                    root.setPadding(new Insets(20, 0, 20, 20));
-                    Label label = new Label();
-                    label.setText("许愿条件：请先手动许愿一个CF/LOL的道具");
-                    label.setPrefWidth(280);
-                    label.setPrefHeight(20);
-                    label.setWrapText(true);
-                    label.setAlignment(Pos.CENTER_RIGHT);
-                    root.getChildren().add(label);
-                    Button exchange = new Button();
-                    exchange.setText("每日任务");
-                    HBox.setMargin(exchange, new Insets(0, 0, 0, 40));
-                    root.getChildren().add(exchange);
-                    exchange.setOnAction(event -> {
-                        stage.close();
-                        ExecutorService executorService = Executors.newSingleThreadExecutor();
-                        executorService.execute(() -> {
-                            Map<String, Object> cookieMap = DNFUtil.cookies;
-                            cookieMap.put("djc_appSource", "android");
-                            cookieMap.put("djc_appVersion", "102");
-                            cookieMap.put("acctype", "");
-                            List<Payload> payloadList = new ArrayList<>();
-                            Payload payload;
-
-                            try {
-                                String result = DjcUtil.getDemandList();
-                                JSONObject resultObject = JSON.parseObject(result);
-                                JSONObject data = resultObject.getJSONObject("data");
-                                JSONArray list = data.getJSONArray("list");
-                                if (list.size() > 0) {
-                                    JSONObject jsonObject = list.getJSONObject(0);
-
-                                    String iZoneId = jsonObject.getString("iZoneId");
-                                    String sRoleName = jsonObject.getString("sRoleName");
-                                    String sZoneDesc = URLEncoder.encode(jsonObject.getString("sZoneDesc"), "UTF-8");
-                                    String sBizCode = jsonObject.getString("sBizCode");
-                                    String sGoodId = "";
-                                    payload = new Payload();
-                                    payload.setInterfaceUrl("https://djcapp.game.qq.com/daoju/igw/main/");
-                                    String paramString = "_service=app.demand.create&iAppId=1001&_app_id=1001&p_tk=${gTk}&iActionId=3&sGetterDream=%E5%9C%9F%E8%B1%AA%E5%9C%9F%E8%B1%AA%E6%B1%82%E5%8C%85%E5%85%BB%EF%BC%81&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-25&ch=10000&sVersionName=v4.1.2.1&appSource=android&sDjcSign=${djcSign}";
-                                    paramString += "&sBizCode=" + sBizCode +
-                                            "&iZoneId=" + iZoneId +
-                                            "&sRoleName=" + sRoleName;
-                                    if ("cf".equals(sBizCode)) {
-                                        sGoodId = "2395";
-                                        paramString += "&sZoneDesc= " + sZoneDesc;
-                                        payload.setNote("许愿猎狐者");
-                                    } else if ("lol".equals(sBizCode)) {
-                                        sGoodId = "674";
-                                        payload.setNote("许愿德玛西亚之力盖伦");
-                                    }
-                                    paramString +=  "&iGoodsId=" + sGoodId + "&sRoleId=${qq}";
-                                    payload.setParams(paramString);
-                                    payload.setMethod(0);
-                                    String res = DNFUtil.get(payload);
-                                    Payload finalPayload = payload;
-                                    Platform.runLater(() -> {
-                                        logArea.appendText(finalPayload.getNote() + "：" + res + "\n");
-                                    });
-                                } else {
-                                    Platform.runLater(() -> {
-                                        logArea.appendText("请先许愿一个除了猎狐者/德玛西亚之力盖伦以外的道具\n");
-                                    });
-                                }
-                            } catch (Exception e) {
-                                Platform.runLater(() -> {
-                                    logArea.appendText("获取许愿列表失败\n");
-                                });
-                            }
-
-                            // 签到
-                            payload = new Payload();
-                            payload.setInterfaceUrl("https://comm.ams.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=dj&iActivityId=11117&sServiceDepartment=djc&set_info=newterminals&&weexVersion=0.9.4&platform=android&deviceModel=${deviceModel}&&appSource=android&appVersion=102&ch=10000&sDeviceID=${deviceId}&osVersion=Android-22&p_tk=${gTk}&sVersionName=v4.1.2.1");
-                            payload.setParams("appVersion=102&ch=10000&iActivityId=11117&sDjcSign=${djcSign}&sDeviceID=${deviceId}&p_tk=${gTk}&osVersion=Android-22&iFlowId=96939&sVersionName=v4.1.2.1&sServiceDepartment=djc&sServiceType=dj&appSource=android&g_tk=${gTk}");
-                            payload.setMethod(1);
-                            payload.setTimes(1);
-                            payload.setTimeout(1);
-                            payload.setNote("签到");
-                            payloadList.add(payload);
-
-                            // 浏览绝不错亿
-                            payload = new Payload();
-                            payload.setInterfaceUrl("https://djcapp.game.qq.com/daoju/igw/main/");
-                            payload.setParams("_service=app.task.report&&weexVersion=0.9.4&platform=android&deviceModel=${deviceModel}&task_type=activity_center&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android&sDjcSign=${djcSign}");
-                            payload.setMethod(0);
-                            payload.setNote("浏览绝不错亿");
-                            payloadList.add(payload);
-
-                            // 绝不错亿
-                            payload = new Payload();
-                            payload.setInterfaceUrl("https://apps.game.qq.com/daoju/v3/api/we/usertaskv2/Usertask.php");
-                            payload.setParams("iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json&optype=receive_usertask&appid=1001&iruleId=100040&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android");
-                            payload.setMethod(0);
-                            payload.setNote("绝不错亿");
-                            payloadList.add(payload);
-
-                            // 兑换pl药
-                            payload = new Payload();
-                            payload.setInterfaceUrl("https://apps.game.qq.com/cgi-bin/daoju/v3/hs/i_buy.cgi");
-                            payload.setParams("weexVersion=0.9.4&platform=android&deviceModel=${deviceModel}&&&_output_fmt=1&_plug_id=9800&_from=app&iGoodsSeqId=755&iActionId=2594&iActionType=26&_biz_code=dnf&biz=dnf&appid=1003&_app_id=1003&rolename=${characterName}&lRoleId=${characterNo}&iZone=${areaId}&p_tk=${gTk}&_cs=2&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android&sDjcSign=${djcSign}");
-                            payload.setMethod(0);
-                            payload.setNote("兑换pl药");
-                            payloadList.add(payload);
-
-                            // 兑换有礼
-                            payload = new Payload();
-                            payload.setInterfaceUrl("https://apps.game.qq.com/daoju/v3/api/we/usertaskv2/Usertask.php");
-                            payload.setParams("iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json&optype=receive_usertask&appid=1001&iruleId=327091&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android");
-                            payload.setMethod(0);
-                            payload.setNote("兑换有礼");
-                            payloadList.add(payload);
-
-                            // 有理想
-                            payload = new Payload();
-                            payload.setInterfaceUrl("https://apps.game.qq.com/daoju/v3/api/we/usertaskv2/Usertask.php");
-                            payload.setParams("iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json&optype=receive_usertask&appid=1001&iruleId=302124&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android");
-                            payload.setMethod(0);
-                            payload.setNote("有理想");
-                            payloadList.add(payload);
-
-                            // 银宝箱
-                            payload = new Payload();
-                            payload.setInterfaceUrl("https://apps.game.qq.com/daoju/v3/api/we/usertaskv2/Usertask.php");
-                            payload.setParams("iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json&optype=receive_usertask&appid=1001&iruleId=100001&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android");
-                            payload.setMethod(0);
-                            payload.setNote("银宝箱");
-                            payloadList.add(payload);
-
-                            // 金宝箱
-                            payload = new Payload();
-                            payload.setInterfaceUrl("https://apps.game.qq.com/daoju/v3/api/we/usertaskv2/Usertask.php");
-                            payload.setParams("iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json&optype=receive_usertask&appid=1001&iruleId=100002&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-22&ch=10000&sVersionName=v4.1.2.1&appSource=android");
-                            payload.setMethod(0);
-                            payload.setNote("金宝箱");
-                            payloadList.add(payload);
-
-                            // 执行次数
-                            for (Payload p : payloadList) {
-                                try {
-                                    String result = DNFUtil.get(p);
-                                    if (StringUtils.isNoneEmpty(p.getNote())) {
-                                        Platform.runLater(() -> {
-                                            logArea.appendText(p.getNote() + "：" + result + "\n");
-                                        });
-                                    }
-                                    Thread.sleep(1000);
-                                } catch (Exception e) {
-                                    Platform.runLater(() -> {
-                                        logArea.appendText("接口访问失败\n");
-                                    });
-                                }
-                            }
-
-                            try {
-                                String result = DjcUtil.getDemandList();
-                                JSONObject resultObject = JSON.parseObject(result);
-                                JSONObject data = resultObject.getJSONObject("data");
-                                JSONArray list = data.getJSONArray("list");
-                                JSONObject target = null;
-                                for (int i = 0; i < list.size(); i++) {
-                                    JSONObject jsonObject = list.getJSONObject(i);
-                                    String goodId = jsonObject.getString("iGoodsId");
-                                    if ("2395".equals(goodId) || "674".equals(goodId)) {
-                                        target = jsonObject;
-                                        break;
-                                    }
-                                }
-                                if (target != null) {
-                                    String sKeyId = target.getString("sKeyId");
-                                    payload = new Payload();
-                                    payload.setInterfaceUrl("https://apps.game.qq.com/daoju/djcapp/v5/demand/DemandDelete.php");
-                                    payload.setParams("output_format=jsonp&iAppId=1001&_app_id=1001&p_tk=${gTk}&output_format=json&_output_fmt=json" +
-                                            "&sKeyId=" + sKeyId + "&sDeviceID=${deviceId}&appVersion=102&p_tk=${gTk}&osVersion=Android-25&ch=10000&sVersionName=v4.1.2.1&appSource=android");
-                                    payload.setMethod(0);
-                                    payload.setNote("删除许愿");
-                                    String res = DNFUtil.get(payload);
-                                    Payload finalPayload = payload;
-                                    Platform.runLater(() -> {
-                                        logArea.appendText(finalPayload.getNote() + "：" + res + "\n");
-                                    });
-                                } else {
-                                    Platform.runLater(() -> {
-                                        logArea.appendText("未找到许愿道具，无法删除\n");
-                                    });
-                                }
-                            } catch (Exception e) {
-                                logger.error("msg", e);
-                                Platform.runLater(() -> {
-                                    logArea.appendText("获取许愿列表失败\n");
-                                });
-                            }
-                        });
-                        executorService.shutdown();
-                    });
-                    Scene scene = new Scene(root, 450, 60);
-                    stage.setScene(scene);
-                    stage.setResizable(false);
-                    stage.show();
+                    try {
+                        Parent root = FXMLLoader.load(getClass().getResource("/djc.fxml"));
+                        Stage stage = new Stage();
+                        stage.setTitle("道具城");
+                        Scene scene = new Scene(root, 320, 120);
+                        stage.setScene(scene);
+                        stage.setResizable(false);
+                        stage.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             } else {
                 Platform.runLater(() -> {

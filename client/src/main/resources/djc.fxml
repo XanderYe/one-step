@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="root" prefHeight="120.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.xanderye.controller.DjcController">
+   <children>
+      <Label layoutX="43.0" layoutY="28.0" text="许愿条件：请先手动许愿一个CF/LOL的道具" />
+      <ComboBox fx:id="iGoodBox" layoutX="23.0" layoutY="65.0" prefHeight="29.0" prefWidth="125.0" />
+      <Button layoutX="201.0" layoutY="65.0" mnemonicParsing="false" onAction="#djc" prefHeight="29.0" prefWidth="90.0" text="每日任务" />
+   </children>
+</AnchorPane>

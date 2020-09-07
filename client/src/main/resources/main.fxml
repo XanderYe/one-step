@@ -21,7 +21,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="工具">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#djc" text="道聚城" />
+                        <MenuItem mnemonicParsing="false" onAction="#openDjc" text="道聚城" />
                     </items>
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#exchange" text="心悦批量兑换" />
